@@ -7,6 +7,8 @@ class FileHandler
 public:
     FileHandler();
     bool listenForTurn();
+    bool checkGameOver();
+    std::string getLastMove();
 };
 
 #endif
