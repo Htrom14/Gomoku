@@ -1,1 +1,1 @@
-g++ -o ./build/gomoku src/Main.cpp src/FileHandler.cpp -I ./src
+g++ -o ./build/gomoku src/Main.cpp src/FileHandler.cpp src/boardHandlers.cpp -I ./src

@@ -4,14 +4,16 @@
 #include <chrono>
 #include <thread>
 #include <string>
+#include "boardHandlers.h"
+#include "Main.h"
 
 
 using namespace std;
 
 
 FileHandler * fileHandler;
+int board[15][15] = {};
 
-bool foundFile;
 int main(int argc, char *argv[])
 {
     while(true){
