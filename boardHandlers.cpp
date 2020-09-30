@@ -8,8 +8,8 @@
  * @param y y coordinate of move (origin in bottom left)
  * @param playerTurn if this is our move, playerTurn = 1. Incoming move playerTurn = 2
  * */
-void makeMoveOnBoard(int** board, int x, int y, int playerTurn) {
-    *((*(board+x))+y) = playerTurn;
+void makeMoveOnBoard(int board[15][15], int x, int y, int playerTurn) {
+    board[x][y] = playerTurn;
 }
 
 /**
@@ -19,9 +19,20 @@ void makeMoveOnBoard(int** board, int x, int y, int playerTurn) {
  * @param outRow pointer to an int to be used as x val later
  * @param outCol pointer to an int to be used as y cal later
  * */
-void translateMoveToCoords(int inRow, char inCol, int* outRow, int* outCol) {
-    *outRow = 15 - inRow;
-    *outCol = ((int) inCol) - 65; //A is Ascii 65
+void translateMoveToCoords(std::string myStr,  int* outRow, int* outCol) {
+    char c = myStr[0];
+    if (myStr.length() == 3) {
+        //one character row #
+        *outRow = 15 - ((int)myStr[2]-48);
+        std::cout << myStr[2] << std::endl;
+    }
+    else if (myStr.length() == 4) {
+        *outRow = 15 - (int)(myStr[3]-48);
+    }
+    else {
+        std::cout << "ERROR. Move String incorrecly parsed" << std::endl;
+    }
+    *outCol = ((int) c) - 65; //A is Ascii 65
 }
 
 /**
@@ -42,12 +53,12 @@ void translateCoordsIntoMove(int moveRow, int moveCol, char* strOut) {
     p++;
     //now the tougher part
     if (tempOutRow < 10) {
-        *p = (char) tempOutRow+30;
+        *p = (char) tempOutRow+48;
         *(p+1) = '\0';
     }
     else {
         *p = '1';
-        *(p+1) = (char)((tempOutRow-10)+30);
+        *(p+1) = (char)((tempOutRow-10)+48);
         *(p+2) = '\0'; 
     }
 }
