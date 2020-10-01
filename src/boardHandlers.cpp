@@ -23,11 +23,11 @@ void translateMoveToCoords(std::string myStr,  int* outRow, int* outCol) {
     char c = myStr[0];
     if (myStr.length() == 3) {
         //one character row #
-        *outRow = 15 - ((int)myStr[2]-48);
+        *outRow = ((int)myStr[2]-48) - 1;
         std::cout << myStr[2] << std::endl;
     }
     else if (myStr.length() == 4) {
-        *outRow = 15 - (int)(myStr[3]-48);
+        *outRow = (int)(myStr[3]-48) + 9;
     }
     else {
         std::cout << "ERROR. Move String incorrecly parsed" << std::endl;
@@ -43,7 +43,7 @@ void translateMoveToCoords(std::string myStr,  int* outRow, int* outCol) {
  * @param strOut pointer to character array (at least 5 from the end) to put the move into
  * */
 void translateCoordsIntoMove(int moveRow, int moveCol, char* strOut) {
-    int tempOutRow = 15 - moveRow;
+    int tempOutRow = moveRow;
     char* p;
     p = strOut;
     //first char

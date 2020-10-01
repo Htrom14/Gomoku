@@ -6,6 +6,7 @@
 #include <string>
 #include "boardHandlers.h"
 #include "Main.h"
+#include "Node.h"
 
 
 using namespace std;
@@ -35,6 +36,9 @@ int main(int argc, char *argv[])
             cout << "MoveCol: " << madeMoveCol << endl;
             makeMoveOnBoard(board, madeMoveRow, madeMoveCol, 2);
             cout << board[14][0] << endl;
+            Node node = Node(2, board);
+            node.printBoard();
+
             break;
             // writeMove()
 		}else{
