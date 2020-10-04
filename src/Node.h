@@ -2,6 +2,7 @@
 #define Node_H
 #include<iostream> 
 #include <deque>
+#include "boardHandlers.h"
 
 
 class Node
