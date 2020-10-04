@@ -14,11 +14,12 @@ public:
     int heuristic;
     int minmax;
     std::deque<Node> children;
-    void updateMinMax();
+    int updateMinMax();
     void updateHeuristic();
     void printBoard();
     int getMinMax();
     int getHeuristic();
+    std::deque<Node> getChildren();
 };
 
 #endif

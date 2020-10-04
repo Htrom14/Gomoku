@@ -24,9 +24,23 @@ void Node::updateHeuristic(){
     
 }
 
-void Node::updateMinMax(){
+/**
+ * Updates the min max value of this node
+ * @return the min max value of this node 
+ * */
+
+int Node::updateMinMax(){
     //TODO
-    // Lookup their heuristic
+    //moves = generateMoves()
+    //for loop
+}
+
+/**
+ * getChildren: creates node objects corresponding to the current node
+ * @return deque of Node objects  
+ * */
+std::deque<Node> getChildren() {
+    
 }
 
 void Node::printBoard(){
