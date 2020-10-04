@@ -42,19 +42,23 @@ int Node::updateMinMax(Node node, int depthLevel, bool maximizingPlayer){
     }
 
     if(maximizingPlayer){
-        maxEval = - 1000000;
+        maxEval = -1000000;
         for(Node child : node.children){
             eval = updateMinMax(child, depthLevel + 1, false);
+            if(eval > maxEval){
+                maxEval = eval;
+            }
         }
-        maxEval = max(maxEval, eval);
         return maxEval;
     }
     else{
         minEval = 1000000;
         for(Node child : node.children){
             eval = updateMinMax(child, depthLevel + 1, true);
+            if(eval < minEval){
+                eval = minEval;
+            }
         }
-        minEval = min(minEval, eval);
         return minEval;
     }
 }
