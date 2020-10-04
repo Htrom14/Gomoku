@@ -74,9 +74,9 @@ void getListOfMoves(std::array<std::array<int, 15>, 15> board, int turn, std::de
         for (int j = 0; j < 15; j++) {
             if (board[i][j] == 0) {
                 std::array<std::array<int, 15>, 15> newBoard {};
-                //std::copy(&board[0][0], &board[0][0]+15*15, &newBoard[0][0]);
-                //newBoard[i][j] = turn;
-                //boardList->push_front(newBoard);
+                std::copy(&board[0][0], &board[0][0]+15*15, &newBoard[0][0]);
+                newBoard[i][j] = turn;
+                boardList->push_front(newBoard);
             }
         }
     }

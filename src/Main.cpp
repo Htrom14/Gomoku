@@ -19,7 +19,7 @@ int madeMoveCol;
 
 int main(int argc, char *argv[])
 {
-    madeMoveRow = 0;
+    /*madeMoveRow = 0;
     madeMoveCol = 0;
     while(true){
 		if(fileHandler->listenForTurn()){
@@ -46,6 +46,6 @@ int main(int argc, char *argv[])
 		}
         
        
-	}
+	}*/
     return 0;
 }
