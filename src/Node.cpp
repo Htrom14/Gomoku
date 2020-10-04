@@ -2,7 +2,7 @@
 
 using namespace std; 
 
-const int TERMINAL_DEPTH = 5;
+const int TERMINAL_DEPTH = 3;
 
 /***
 *  Constructor for a node
@@ -28,8 +28,35 @@ Node::Node(int turn1, std::array<std::array<int, 15>, 15> board1, int depth1, in
  *  @return the evaluation value
  *  */
 int Node::evaluate(){
-    evaluation = 1;
-    return evaluation;
+    //loop through board
+    int score = 0;
+
+    for(int i = 0; i < 15; i++){
+        for(int j = 0; j < 15; j ++){
+            if(board[i][j] != 0){
+                for(std::array<int, 2> neighbor : getNeighborsOf8(i, j)){
+                    if(board[i][j] == 1){
+                        if(board[neighbor[0]][neighbor[1]] == 1){
+                            score++;
+                        }
+                    }
+                    else{
+                        if(board[neighbor[0]][neighbor[1]] == 2){
+                            score--;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    // grab neighbors at each point
+    // checkneighbors for matching turn as the given point
+    if(score == -2){
+        cout << "PreviousX: " << previousX << " PreviousY: " << previousY << " Score: " << score << endl;
+        
+        printBoard();
+    }
+    return score;
 }
 
 /**

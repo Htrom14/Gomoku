@@ -46,17 +46,32 @@ int main(int argc, char *argv[])
 	// 	}
        
 	// }
+
     board[0][0] = 1;
+    board[0][1] = 1;
+    board[0][2] = 1;
+    board[1][0] = 2;
+    board[1][1] = 2;
     Node node = Node(1, board, 0, 0, 0);
 
+    // node.getChildren();
+
+    // int counter = 0;
+    // for(Node child : node.children){
+    //     counter++;
+    // }
+
+    // cout << node.evaluate() << endl;
     node.getChildren();
-
-    int counter = 0;
-    for(Node child : node.children){
-        counter++;
-    }
-
     cout << node.updateMinMax(0, true) << endl;
-    cout << counter << endl;
+
+    // cout << counter << endl;
+
+    // for(std::array<int, 2> neighbor : getNeighborsOf8(1,1)){
+    //     cout << neighbor[0] << " " << neighbor[1] << endl;
+    // }
+
+
+
     return 0;
 }

@@ -85,3 +85,29 @@ std::vector<std::array<int, 2>>  getListOfMoves(std::array<std::array<int, 15>, 
     }
     return correspondingMoves;
 }
+
+/**
+ *  Gets the indexes of the neighbors
+ *  @return the indexes of neighbors
+ *  */
+std::vector<std::array<int, 2>> getNeighborsOf8(int x, int y){
+    std::vector<std::array<int, 2>> neighbors;
+    std::array<int, 2> index;
+
+    for(int i = -1; i <= 1; i++){
+        if(x + i == 15 || x + i == -1){
+            continue;
+        }
+        for(int j = -1; j <= 1; j++){
+            if(y + j == 15 || y + j == -1){
+                continue;
+            }
+            if(!(i == 0 && j == 0)){
+                index = { x + i, y + j};
+                neighbors.push_back(index);
+            }
+        }
+    }
+
+    return neighbors;
+}
