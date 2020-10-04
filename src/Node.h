@@ -8,15 +8,15 @@
 class Node
 {
 public:
-    Node(int turn, int board[15][15], int depth);
+    Node(int turn, std::array<std::array<int, 15>, 15> board, int depth);
     int depth;
     int turn;
     bool terminal;
-    int board[15][15];
     int evaluation;
+    std::array<std::array<int, 15>, 15> board;
     int minmax;
     std::deque<Node> children;
-    int updateMinMax(Node node, int depthLevel, bool maximizingPlayer);
+    int updateMinMax(int depthLevel, bool maximizingPlayer);
     int evaluate();
     void printBoard();
     int getMinMax();

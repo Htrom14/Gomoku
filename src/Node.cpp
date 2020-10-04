@@ -10,13 +10,13 @@ const int TERMINAL_DEPTH = 5;
 *  @param board The current state of the board
 *  @return the newly created node object
 */
-Node::Node(int turn1, int board1[15][15], int depth1)
+Node::Node(int turn1, std::array<std::array<int, 15>, 15> board1, int depth1)
 { 
     depth = depth1;
     turn = turn1;
     for(int i = 0; i < 15; i++){
         for(int j = 0; j < 15; j++){
-            board[j][i] = board1[j][i];
+            board[i][j] = board1[i][j];
         }
     }
 }
@@ -35,16 +35,16 @@ int Node::evaluate(){
  * @return the min max value of this node 
  * */
 
-int Node::updateMinMax(Node node, int depthLevel, bool maximizingPlayer){
+int Node::updateMinMax(int depthLevel, bool maximizingPlayer){
     int eval, maxEval, minEval;
-    if(depthLevel == TERMINAL_DEPTH || node.terminal == true){ 
-        return node.evaluate(); //Evaluation of node
+    if(depthLevel == TERMINAL_DEPTH || terminal == true){ 
+        return evaluate(); //Evaluation of node
     }
 
     if(maximizingPlayer){
         maxEval = -1000000;
-        for(Node child : node.children){
-            eval = updateMinMax(child, depthLevel + 1, false);
+        for(Node child : children){
+            eval = child.updateMinMax(depthLevel + 1, false);
             if(eval > maxEval){
                 maxEval = eval;
             }
@@ -53,8 +53,8 @@ int Node::updateMinMax(Node node, int depthLevel, bool maximizingPlayer){
     }
     else{
         minEval = 1000000;
-        for(Node child : node.children){
-            eval = updateMinMax(child, depthLevel + 1, true);
+        for(Node child : children){
+            eval = child.updateMinMax(depthLevel + 1, true);
             if(eval < minEval){
                 eval = minEval;
             }
@@ -68,12 +68,13 @@ int Node::updateMinMax(Node node, int depthLevel, bool maximizingPlayer){
  * @return deque of Node objects  
  * */
 std::deque<Node> Node::getChildren() {
-    std::deque<int[15][15]> childBoards;
+    std::deque<std::array<std::array<int, 15>, 15>> childBoards;
     std::deque<Node> childNodes;
     getListOfMoves(board, 3-turn, &childBoards);
     for (int i = 0; i < childBoards.size(); i++) {
         childNodes.emplace_front(Node(3-turn, childBoards[i], depth+1));
     }
+    children = childNodes;
     return childNodes;
 }
 
