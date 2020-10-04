@@ -2,6 +2,8 @@
 
 using namespace std; 
 
+const int TERMINAL_DEPTH = 5;
+
 /***
 *  Constructor for a node
 *  @param turn The turn of the player
@@ -19,9 +21,13 @@ Node::Node(int turn1, int board1[15][15], int depth1)
     }
 }
 
-void Node::updateHeuristic(){
-    //TODO
-    
+/**
+ *  Evaluates the current status of the board
+ *  @return the evaluation value
+ *  */
+int Node::evaluate(){
+    evaluation = 1;
+    return evaluation;
 }
 
 /**
@@ -29,10 +35,28 @@ void Node::updateHeuristic(){
  * @return the min max value of this node 
  * */
 
-int Node::updateMinMax(){
-    //TODO
-    //moves = generateMoves()
-    //for loop
+int Node::updateMinMax(Node node, int depthLevel, bool maximizingPlayer){
+    int eval, maxEval, minEval;
+    if(depthLevel == TERMINAL_DEPTH || node.terminal == true){ 
+        return node.evaluate(); //Evaluation of node
+    }
+
+    if(maximizingPlayer){
+        maxEval = - 1000000;
+        for(Node child : node.children){
+            eval = updateMinMax(child, depthLevel + 1, false);
+        }
+        maxEval = max(maxEval, eval);
+        return maxEval;
+    }
+    else{
+        minEval = 1000000;
+        for(Node child : node.children){
+            eval = updateMinMax(child, depthLevel + 1, true);
+        }
+        minEval = min(minEval, eval);
+        return minEval;
+    }
 }
 
 /**
@@ -50,10 +74,6 @@ void Node::printBoard(){
         }
         cout << endl;
     }
-}
-
-int Node::getHeuristic(){
-    return heuristic;
 }
 
 int Node::getMinMax(){

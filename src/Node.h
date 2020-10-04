@@ -10,15 +10,15 @@ public:
     Node(int turn, int board[15][15], int depth);
     int depth;
     int turn;
+    bool terminal;
     int board[15][15];
-    int heuristic;
+    int evaluation;
     int minmax;
     std::deque<Node> children;
-    int updateMinMax();
-    void updateHeuristic();
+    int updateMinMax(Node node, int depthLevel, bool maximizingPlayer);
+    int evaluate();
     void printBoard();
     int getMinMax();
-    int getHeuristic();
     std::deque<Node> getChildren();
 };
 
