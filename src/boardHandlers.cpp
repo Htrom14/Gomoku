@@ -69,17 +69,15 @@ void translateCoordsIntoMove(int moveRow, int moveCol, char* strOut) {
  *  @param turn who's turn it's about to be
  *  @return arrayOfBoards a deque of length 0 - 255 with each being a 15 by 15 array
  *  */
-std::deque<int[15][15]> getListOfMoves(int board[15][15] , int turn){
-    std::deque<int[15][15]> toRet;
+void getListOfMoves(int board[15][15] , int turn, std::deque<int[15][15]> *boardList){
     for (int i = 0; i < 15; i++) {
         for (int j = 0; j < 15; j++) {
             if (board[i][j] == 0) {
                 int newBoard[15][15];
                 std::copy(&board[0][0], &board[0][0]+15*15, &newBoard[0][0]);
                 newBoard[i][j] = turn;
-                toRet.emplace_front(newBoard);
+                boardList->emplace_front(newBoard);
             }
         }
     }
-    return toRet;
 }

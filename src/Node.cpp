@@ -39,8 +39,14 @@ int Node::updateMinMax(){
  * getChildren: creates node objects corresponding to the current node
  * @return deque of Node objects  
  * */
-std::deque<Node> getChildren() {
-    
+std::deque<Node> Node::getChildren() {
+    std::deque<int[15][15]> childBoards;
+    std::deque<Node> childNodes;
+    getListOfMoves(board, 3-turn, &childBoards);
+    for (int i = 0; i < childBoards.size(); i++) {
+        childNodes.emplace_front(Node(3-turn, childBoards[i], depth+1));
+    }
+    return childNodes;
 }
 
 void Node::printBoard(){
