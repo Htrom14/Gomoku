@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
             cout << "MoveCol: " << madeMoveCol << endl;
             makeMoveOnBoard(board, madeMoveRow, madeMoveCol, 2);
             cout << board[14][0] << endl;
-            Node node = Node(2, board);
+            Node node = Node(2, board, 0);
             node.printBoard();
 
             break;
