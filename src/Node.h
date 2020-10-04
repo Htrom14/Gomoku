@@ -8,9 +8,10 @@
 class Node
 {
 public:
-    Node(int turn, std::array<std::array<int, 15>, 15> board, int depth);
+    Node(int turn, std::array<std::array<int, 15>, 15> board, int depth, int previousX, int previousY);
     int depth;
     int turn;
+    int previousX, previousY;
     bool terminal;
     int evaluation;
     std::array<std::array<int, 15>, 15> board;

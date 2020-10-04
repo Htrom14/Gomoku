@@ -10,8 +10,10 @@ const int TERMINAL_DEPTH = 5;
 *  @param board The current state of the board
 *  @return the newly created node object
 */
-Node::Node(int turn1, std::array<std::array<int, 15>, 15> board1, int depth1)
+Node::Node(int turn1, std::array<std::array<int, 15>, 15> board1, int depth1, int previousX1, int previousY1)
 { 
+    previousX = previousX1;
+    previousY = previousY1;
     depth = depth1;
     turn = turn1;
     for(int i = 0; i < 15; i++){
@@ -70,9 +72,9 @@ int Node::updateMinMax(int depthLevel, bool maximizingPlayer){
 std::deque<Node> Node::getChildren() {
     std::deque<std::array<std::array<int, 15>, 15>> childBoards;
     std::deque<Node> childNodes;
-    getListOfMoves(board, 3-turn, &childBoards);
+    std::vector<std::array<int, 2>> correspondingMoves = getListOfMoves(board, 3-turn, &childBoards);
     for (int i = 0; i < childBoards.size(); i++) {
-        childNodes.emplace_front(Node(3-turn, childBoards[i], depth+1));
+        childNodes.emplace_front(Node(3-turn, childBoards[i], depth+1, correspondingMoves.at(i)[0], correspondingMoves.at(i)[1]));
     }
     children = childNodes;
     return childNodes;

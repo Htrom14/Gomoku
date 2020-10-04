@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
        
 	// }
     board[0][0] = 1;
-    Node node = Node(1, board, 0);
+    Node node = Node(1, board, 0, 0, 0);
 
     node.getChildren();
 
@@ -57,7 +57,6 @@ int main(int argc, char *argv[])
     }
 
     cout << node.updateMinMax(0, true) << endl;
-
     cout << counter << endl;
     return 0;
 }
