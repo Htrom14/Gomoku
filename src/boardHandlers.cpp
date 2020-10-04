@@ -79,7 +79,7 @@ std::vector<std::array<int, 2>>  getListOfMoves(std::array<std::array<int, 15>, 
                 std::array<std::array<int, 15>, 15> newBoard {};
                 std::copy(&board[0][0], &board[0][0]+15*15, &newBoard[0][0]);
                 newBoard[i][j] = turn;
-                boardList->push_front(newBoard);
+                boardList->push_back(newBoard);
             }
         }
     }
