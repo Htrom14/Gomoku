@@ -8,13 +8,13 @@ using namespace std;
 *  @param board The current state of the board
 *  @return the newly created node object
 */
-Node::Node(int turn1, int board1[15][15], int depth1)
+Node::Node(int turn1, std::array<std::array<int, 15>, 15> board1, int depth1)
 { 
     depth = depth1;
     turn = turn1;
     for(int i = 0; i < 15; i++){
         for(int j = 0; j < 15; j++){
-            board[j][i] = board1[j][i];
+            board[i][j] = board1[i][j];
         }
     }
 }
@@ -40,7 +40,7 @@ int Node::updateMinMax(){
  * @return deque of Node objects  
  * */
 std::deque<Node> Node::getChildren() {
-    std::deque<int[15][15]> childBoards;
+    std::deque<std::array<std::array<int, 15>, 15>> childBoards;
     std::deque<Node> childNodes;
     getListOfMoves(board, 3-turn, &childBoards);
     for (int i = 0; i < childBoards.size(); i++) {

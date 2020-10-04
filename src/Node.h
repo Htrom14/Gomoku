@@ -8,10 +8,10 @@
 class Node
 {
 public:
-    Node(int turn, int board[15][15], int depth);
+    Node(int turn, std::array<std::array<int, 15>, 15> board, int depth);
     int depth;
     int turn;
-    int board[15][15];
+    std::array<std::array<int, 15>, 15> board;
     int heuristic;
     int minmax;
     std::deque<Node> children;
