@@ -62,3 +62,13 @@ void translateCoordsIntoMove(int moveRow, int moveCol, char* strOut) {
         *(p+2) = '\0'; 
     }
 }
+
+/**
+ *  Gets a list of board states given the current board, and turn
+ *  @param board
+ *  @param turn who's turn it's about to be
+ *  @return arrayOfBoards a deque of length 0 - 255 with each being a 15 by 15 array
+ *  */
+std::deque<int[15][15]> getListOfMoves(int board[15][15] , int turn){
+    return 0;
+}
