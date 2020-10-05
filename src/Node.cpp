@@ -2,7 +2,7 @@
 
 using namespace std; 
 
-const int TERMINAL_DEPTH = 4;
+const int TERMINAL_DEPTH = 5;
 
 /***
 *  Constructor for a node
@@ -101,6 +101,65 @@ int Node::updateMinMax(int depthLevel, bool maximizingPlayer){
         return minEval;
     }
 }
+
+
+
+
+int Node::getMaxValue(Node *node, int depthLevel, int alpha, int beta) {
+    int eval = -10000000;
+    if(depthLevel == TERMINAL_DEPTH || terminal == true){ 
+        return evaluate(); //Evaluation of node
+    }
+    node->getChildren();
+    for (Node &child : node->children) {
+        child.minmax = child.getMinValue(&child, depthLevel+1, alpha, beta);
+        //cout << child.minmax << endl;
+        eval = max(eval, child.minmax);
+        if (eval >= beta) {
+            minmax = eval;
+            return eval;
+        }
+        alpha = max(alpha, eval);
+        //child.evaluation = 100;
+        //child.minmax = eval;
+    } 
+    return eval;
+}
+
+int Node::getMinValue(Node *node, int depthLevel, int alpha, int beta) {
+    int eval = 10000000;
+    if(depthLevel == TERMINAL_DEPTH || terminal == true){ 
+        return evaluate(); //Evaluation of node
+    }
+    node->getChildren();
+    for (Node &child : node->children) {
+        eval = min(eval, child.getMaxValue(&child, depthLevel+1, alpha, beta));
+        if (eval <= alpha) {
+            //minmax = eval;
+            return eval;
+        }
+        beta = min(beta, eval);
+        
+    }
+    //minmax = beta;
+    return eval;
+}
+
+void Node::alphaBetaSearch(std::array<int, 2> *myMove) {
+    int v = getMaxValue(this, 0, -10000000, 10000000);
+    cout << v << endl;
+    int eval;
+    for (Node child : children) {
+        //cout << child.evaluation << endl;
+        if (child.minmax == v) {
+            (*myMove)[0] = child.previousX;
+            (*myMove)[1] = child.previousY;
+            //cout << child.previousX << " " << child.previousY << endl;
+            return;
+        }
+    }
+}
+
 
 /**
  * getChildren: creates node objects corresponding to the current node

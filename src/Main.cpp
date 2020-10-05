@@ -47,25 +47,24 @@ int main(int argc, char *argv[])
        
 	// }
 
-    board[0][0] = 1;
-    board[0][1] = 1;
-    board[0][2] = 1;
-    board[1][0] = 2;
-    board[1][1] = 2;
-    std::vector<std::array<int, 2>> previousMoves;
-    std::array<int, 2> previousMove = {0,0};
-    std::array<int, 2> previousMove1 = {0,1};
-    std::array<int, 2> previousMove2 = {0,2};
-    std::array<int, 2> previousMove3 = {1,0};
-    std::array<int, 2> previousMove4 = {1,1};
 
+
+
+
+
+    board[5][4] = 1;
+    board[5][5] = 1;
+    board[6][5] = 2;
+    std::vector<std::array<int, 2>> previousMoves;
+    
+    std::array<int, 2> previousMove = {5,4};
+    std::array<int, 2> previousMove1 = {5,5};
+    // std::array<int, 2> previousMove2 = {6,5};
     previousMoves.push_back(previousMove);
     previousMoves.push_back(previousMove1);
-    previousMoves.push_back(previousMove2);
-    previousMoves.push_back(previousMove3);
-    previousMoves.push_back(previousMove4);
-
-    Node node = Node(1, board, 0, 0, 0, previousMoves);
+    //board[6][6] = 2;
+    //board[5][4] = 2;
+    Node node = Node(2, board, 0, 6, 5, previousMoves);
 
     // node.getChildren();
 
@@ -75,8 +74,13 @@ int main(int argc, char *argv[])
     // }
 
     // cout << node.evaluate() << endl;
-    node.getChildren();
-    cout << node.updateMinMax(0, true) << endl;
+    //node.getChildren();
+    //cout << node.updateMinMax(0, true) << endl;
+    std::array<int, 2> myInts;
+    myInts[0] = 1;
+    myInts[1] = 2;
+    node.alphaBetaSearch(&myInts);
+    cout << myInts[0] << " " << myInts[1] << endl;
 
     // cout << counter << endl;
 

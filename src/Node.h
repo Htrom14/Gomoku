@@ -23,6 +23,10 @@ public:
     void printBoard();
     int getMinMax();
     std::deque<Node> getChildren();
+    void alphaBetaSearch(std::array<int, 2> *myMove);
+    //int Node::getMaxValue(int depthLevel, int alpha, int beta);
+    int getMaxValue(Node *node, int depthLevel, int alpha, int beta);
+    int getMinValue(Node *node, int depthLevel, int alpha, int beta);
 };
 
 #endif
