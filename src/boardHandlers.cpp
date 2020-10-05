@@ -69,16 +69,16 @@ void translateCoordsIntoMove(int moveRow, int moveCol, char* strOut) {
  *  @param turn who's turn it's about to be
  *  @return arrayOfBoards a deque of length 0 - 255 with each being a 15 by 15 array
  *  */
-std::vector<std::array<int, 2>>  getListOfMoves(std::array<std::array<int, 15>, 15> board, int turn, std::deque<std::array<std::array<int, 15>, 15>> *boardList){
+std::vector<std::array<int, 2>>  getListOfMoves(std::array<std::array<int, 15>, 15> board, int turn, std::deque<std::array<std::array<int, 15>, 15>> *boardList, std::vector<std::array<int, 2>> previousMoves){
     std::vector<std::array<int, 2>> correspondingMoves;
-    for (int i = 0; i < 15; i++) {
-        for (int j = 0; j < 15; j++) {
-            if (board[i][j] == 0) {
-                std::array<int, 2> move = {i,j};
+    for(std::array<int, 2> prevMove : previousMoves){
+        for(std::array<int, 2> neighbor : getNeighborsOf8(prevMove[0], prevMove[1])){
+            if (board[neighbor[0]][neighbor[1]] == 0) {
+                std::array<int, 2> move = {neighbor[0],neighbor[1]};
                 correspondingMoves.push_back(move);
                 std::array<std::array<int, 15>, 15> newBoard {};
                 std::copy(&board[0][0], &board[0][0]+15*15, &newBoard[0][0]);
-                newBoard[i][j] = turn;
+                newBoard[move[0]][move[1]] = turn;
                 boardList->push_back(newBoard);
             }
         }

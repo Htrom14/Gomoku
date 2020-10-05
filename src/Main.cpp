@@ -52,7 +52,20 @@ int main(int argc, char *argv[])
     board[0][2] = 1;
     board[1][0] = 2;
     board[1][1] = 2;
-    Node node = Node(1, board, 0, 0, 0);
+    std::vector<std::array<int, 2>> previousMoves;
+    std::array<int, 2> previousMove = {0,0};
+    std::array<int, 2> previousMove1 = {0,1};
+    std::array<int, 2> previousMove2 = {0,2};
+    std::array<int, 2> previousMove3 = {1,0};
+    std::array<int, 2> previousMove4 = {1,1};
+
+    previousMoves.push_back(previousMove);
+    previousMoves.push_back(previousMove1);
+    previousMoves.push_back(previousMove2);
+    previousMoves.push_back(previousMove3);
+    previousMoves.push_back(previousMove4);
+
+    Node node = Node(1, board, 0, 0, 0, previousMoves);
 
     // node.getChildren();
 
@@ -67,7 +80,7 @@ int main(int argc, char *argv[])
 
     // cout << counter << endl;
 
-    // for(std::array<int, 2> neighbor : getNeighborsOf8(1,1)){
+    // for(std::array<int, 2> neighbor : getNeighborsOf8(0,0)){
     //     cout << neighbor[0] << " " << neighbor[1] << endl;
     // }
 
