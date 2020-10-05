@@ -47,12 +47,12 @@ int main(int argc, char *argv[])
        
 	// }
 
-    board[0][0] = 1;
-    board[0][1] = 1;
-    board[0][2] = 1;
-    board[1][0] = 2;
-    board[1][1] = 2;
-    Node node = Node(1, board, 0, 0, 0);
+    board[5][4] = 1;
+    board[5][5] = 1;
+    board[6][5] = 2;
+    //board[6][6] = 2;
+    //board[5][4] = 2;
+    Node node = Node(2, board, 0, 0, 0);
 
     // node.getChildren();
 
@@ -62,8 +62,13 @@ int main(int argc, char *argv[])
     // }
 
     // cout << node.evaluate() << endl;
-    node.getChildren();
-    cout << node.updateMinMax(0, true) << endl;
+    //node.getChildren();
+    //cout << node.updateMinMax(0, true) << endl;
+    std::array<int, 2> myInts;
+    myInts[0] = 1;
+    myInts[1] = 2;
+    node.alphaBetaSearch(&myInts);
+    cout << myInts[0] << " " << myInts[1] << endl;
 
     // cout << counter << endl;
 
