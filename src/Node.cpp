@@ -57,7 +57,8 @@ int Node::evaluate(){
 int Node::getMaxValue(Node *node, int depthLevel, int alpha, int beta) {
     int eval = -10000000;
     if(depthLevel == TERMINAL_DEPTH || terminal == true){ 
-        return evaluate(); //Evaluation of node
+        minmax = evaluate();
+        return minmax; //Evaluation of node
     }
     node->getChildren();
     for (Node &child : node->children) {
@@ -78,7 +79,8 @@ int Node::getMaxValue(Node *node, int depthLevel, int alpha, int beta) {
 int Node::getMinValue(Node *node, int depthLevel, int alpha, int beta) {
     int eval = 10000000;
     if(depthLevel == TERMINAL_DEPTH || terminal == true){ 
-        return evaluate(); //Evaluation of node
+        minmax = evaluate();
+        return minmax; //Evaluation of node
     }
     node->getChildren();
     for (Node &child : node->children) {
@@ -112,7 +114,7 @@ void Node::alphaBetaSearch(std::array<int, 2> *myMove) {
 
 void Node::printMoveOrder(int eval, int numMove) {
     cout << endl << "Move " << numMove << ":" << endl;
-    cout << previousX << " " << previousY << endl;
+    cout << previousX << " " << previousY << " Minmax: " << minmax << endl;
     printBoard();
     if (children.size() > 0) {
         for (Node child: children) {
