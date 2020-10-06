@@ -59,10 +59,10 @@ int main(int argc, char *argv[])
     
     std::array<int, 2> previousMove = {5,4};
     //std::array<int, 2> previousMove1 = {5,5};
-    std::array<int, 2> previousMove2 = {6,5};
+    // std::array<int, 2> previousMove2 = {6,5};
     previousMoves.push_back(previousMove);
     //previousMoves.push_back(previousMove1);
-    previousMoves.push_back(previousMove2);
+    // previousMoves.push_back(previousMove2);
     //board[6][6] = 2;
     //board[5][4] = 2;
     Node node = Node(2, board, 0, 6, 5, previousMoves);
