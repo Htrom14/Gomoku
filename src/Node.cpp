@@ -2,7 +2,7 @@
 
 using namespace std; 
 
-const int TERMINAL_DEPTH = 5;
+const int TERMINAL_DEPTH = 4;
 
 /***
 *  Constructor for a node
