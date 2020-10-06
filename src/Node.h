@@ -22,7 +22,8 @@ public:
     int evaluate();
     void printBoard();
     int getMinMax();
-    std::deque<Node> getChildren();
+    void getChildren();
+    void printMoveOrder(int eval, int numMove);
     void alphaBetaSearch(std::array<int, 2> *myMove);
     //int Node::getMaxValue(int depthLevel, int alpha, int beta);
     int getMaxValue(Node *node, int depthLevel, int alpha, int beta);
