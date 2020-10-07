@@ -7,6 +7,7 @@
 #include <iostream>
 #include <fstream>
 #include <string.h>
+#include <thread>
 #include "boardHandlers.h"
 #include "Main.h"
 #include "Node.h"
@@ -90,7 +91,9 @@ int main(int argc, char *argv[])
         std::array<int, 2> myInts;
         myInts[0] = 1;
         myInts[1] = 2;
-        node.alphaBetaSearch(&myInts);
+        thread alphabetaThread(&Node::alphaBetaSearch, &node, &myInts);
+        alphabetaThread.join();
+        //node.alphaBetaSearch(&myInts);
         
         //update game state and write move to reflect our move
         std::array<int, 2> previousMove = {myInts[0], myInts[1]};
