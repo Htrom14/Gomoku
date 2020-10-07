@@ -8,7 +8,7 @@
  * @param y y coordinate of move (origin in bottom left)
  * @param playerTurn if this is our move, playerTurn = 1. Incoming move playerTurn = 2
  * */
-void makeMoveOnBoard(std::array<std::array<int, 15>, 15> board, int x, int y, int playerTurn){
+void makeMoveOnBoard(std::array<std::array<int, 15>, 15> &board, int x, int y, int playerTurn){
     board[x][y] = playerTurn;
 }
 
@@ -21,6 +21,9 @@ void makeMoveOnBoard(std::array<std::array<int, 15>, 15> board, int x, int y, in
  * */
 void translateMoveToCoords(std::string myStr,  int* outRow, int* outCol) {
     char c = myStr[0];
+    if ((int) c > 80) {
+        c = (char) ((int)c - 32);
+    }
     if (myStr.length() == 3) {
         //one character row #
         *outRow = ((int)myStr[2]-48) - 1;
@@ -58,7 +61,7 @@ void translateCoordsIntoMove(int moveRow, int moveCol, char* strOut) {
     }
     else {
         *p = '1';
-        *(p+1) = (char)((tempOutRow-10)+48);
+        *(p+1) = (char)((tempOutRow-9)+48);
         *(p+2) = '\0'; 
     }
 }

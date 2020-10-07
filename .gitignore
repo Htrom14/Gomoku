@@ -5,3 +5,8 @@ CMakeCache.txt
 Makefile
 build/*
 build
+move_file
+*.go
+history_file
+end_game
+.vscode/*
