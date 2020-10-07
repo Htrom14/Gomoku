@@ -99,11 +99,11 @@ int Node::getMinValue(Node *node, int depthLevel, int alpha, int beta) {
 
 void Node::alphaBetaSearch(std::array<int, 2> *myMove) {
     int v = getMaxValue(this, 0, -10000000, 10000000);
-    cout << v << endl;
+    cout << "BEST MINIMAX FOR MY TURN: " << v << endl;
     int eval;
     for (Node child : children) { 
         if (child.minmax == v) {
-            child.printMoveOrder(v, 1);
+            //child.printMoveOrder(v, 1);
             (*myMove)[0] = child.previousX;
             (*myMove)[1] = child.previousY;
             //cout << child.previousX << " " << child.previousY << endl;
