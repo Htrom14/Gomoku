@@ -55,7 +55,17 @@ int main(int argc, char *argv[])
                 continue;
             }
             else {
-                //decide if we want to flip the other persons stone, if so do it
+                translateMoveToCoords(lastMove, &madeMoveRow,&madeMoveCol);
+                if (madeMoveRow > 0 && madeMoveRow < 15 && madeMoveCol > 0 && madeMoveCol < 15) {
+                    //flip the piece to ours
+                    translateCoordsIntoMove(madeMoveRow, madeMoveCol, &writeOut[5]);
+                    ofstream myfile;
+                    myfile.open("move_file");
+                    myfile << writeOut;
+                    myfile.close();
+                    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+                }
+
             }
         }
         cout << lastMove << endl;
