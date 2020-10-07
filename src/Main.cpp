@@ -58,12 +58,16 @@ int main(int argc, char *argv[])
                 translateMoveToCoords(lastMove, &madeMoveRow,&madeMoveCol);
                 if (madeMoveRow > 0 && madeMoveRow < 15 && madeMoveCol > 0 && madeMoveCol < 15) {
                     //flip the piece to ours
+                    std::array<int, 2> previousMove = {madeMoveRow,madeMoveCol};
+                    previousMoves.push_back(previousMove);
                     translateCoordsIntoMove(madeMoveRow, madeMoveCol, &writeOut[5]);
+                    makeMoveOnBoard(board, madeMoveRow, madeMoveCol, 1);
                     ofstream myfile;
                     myfile.open("move_file");
                     myfile << writeOut;
                     myfile.close();
                     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+                    continue;
                 }
 
             }
