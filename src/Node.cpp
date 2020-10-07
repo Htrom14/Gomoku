@@ -227,7 +227,14 @@ int Node::evaluate(){
     return score;
 }
 
-
+/**
+ * The max node of Minimax, with alpha beta pruning
+ * @param node the current node, where max is making the decision
+ * @param depthLevel the depth level of this expansion in search tree
+ * @param alpha the minimum possible value up to this point so far (this node)
+ * @param beta the maximum possible value up to this point so far (this node)
+ * @return maximum possible value at this node
+ * */
 int Node::getMaxValue(Node *node, int depthLevel, int alpha, int beta) {
     int eval = -1000000000;
     if(depthLevel == TERMINAL_DEPTH || terminal == true){ 
@@ -236,20 +243,26 @@ int Node::getMaxValue(Node *node, int depthLevel, int alpha, int beta) {
     }
     node->getChildren();
     for (Node &child : node->children) {
+        //update the childs minmax so we know which one to pick later, and print
         child.minmax = child.getMinValue(&child, depthLevel+1, alpha, beta);
-        //cout << child.minmax << endl;
         eval = max(eval, child.minmax);
         if (eval >= beta) {
             minmax = eval;
             return eval;
         }
         alpha = max(alpha, eval);
-        //child.evaluation = 100;
-        //child.minmax = eval;
     } 
     return eval;
 }
 
+/**
+ * The min node of Minimax, with alpha beta pruning
+ * @param node the current node, where min is making the decision
+ * @param depthLevel the depth level of this expansion in search tree
+ * @param alpha the minimum possible value up to this point so far (this node)
+ * @param beta the maximum possible value up to this point so far (this node)
+ * @return minimum possible value at this node
+ * */
 int Node::getMinValue(Node *node, int depthLevel, int alpha, int beta) {
     int eval = 1000000000;
     if(depthLevel == TERMINAL_DEPTH || terminal == true){ 
@@ -258,25 +271,30 @@ int Node::getMinValue(Node *node, int depthLevel, int alpha, int beta) {
     }
     node->getChildren();
     for (Node &child : node->children) {
+        //update the childs minmax so we know which one to pick later, and print
         child.minmax = child.getMaxValue(&child, depthLevel+1, alpha, beta);
         eval = min(eval, child.minmax);
         if (eval <= alpha) {
-            //minmax = eval;
             return eval;
         }
-        beta = min(beta, eval);
-        
+        beta = min(beta, eval); 
     }
-    //minmax = beta;
     return eval;
 }
 
+/**
+ * alphaBetaSearch: constructs a search tree from the node this is called on
+ * prunes put nodes that won't change the actual result to save time (see alpha, beta)
+ * prints out the best minimax value 
+ * @param myMove array to place the decided upon move
+ * */
 void Node::alphaBetaSearch(std::array<int, 2> *myMove) {
     int v = getMaxValue(this, 0, -1000000000, 1000000000);
     cout << "BEST MINIMAX FOR MY TURN: " << v << endl;
     int eval;
     for (Node child : children) { 
         if (v == 1000000000) {
+            //this is to make sure we make the winning move if we have it
             if (child.minmax == v && child.terminal) {
                 (*myMove)[0] = child.previousX;
                 (*myMove)[1] = child.previousY;
@@ -284,26 +302,34 @@ void Node::alphaBetaSearch(std::array<int, 2> *myMove) {
             }
         }
         else if (child.minmax == v) {
-            //child.printMoveOrder(v, 1);
             (*myMove)[0] = child.previousX;
             (*myMove)[1] = child.previousY;
-            //cout << child.previousX << " " << child.previousY << endl;
             return;
         }
     }
 }
 
+
+/**
+ * printMoveOrder is for showing the tree that node follows to its chosen minimax val
+ * @param eval the minimax value to be matching
+ * @param numMove number for "how far down the tree are we right now"
+ * */
 void Node::printMoveOrder(int eval, int numMove) {
+    //print out this moves statistics
     cout << endl << "Move " << numMove << ":" << endl;
     cout << previousX << " " << previousY << " Minmax: " << minmax << endl;
     printBoard();
     if (children.size() > 0) {
         for (Node child: children) {
+            //find the child that gave this node its minmax value, print it next
             if (child.minmax == eval) {
                 child.printMoveOrder(eval, numMove+1);
                 return;
             }
         }
+        //this shouldn't ever be reached, but it would let us know a node isn't setting 
+        //it's minimax val properly
         cout << "no minmax" << endl;
     }
     
@@ -312,7 +338,7 @@ void Node::printMoveOrder(int eval, int numMove) {
 
 /**
  * getChildren: creates node objects corresponding to the current node
- * @return deque of Node objects  
+ * No return, but sets the children of the node it is called on  
  * */
 void Node::getChildren() {
     std::deque<std::array<std::array<int, 15>, 15>> childBoards;
