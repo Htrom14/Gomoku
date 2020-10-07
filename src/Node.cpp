@@ -137,11 +137,11 @@ int Node::evaluate(Node& node){
     }
 
 	if ((*enemyScores)[5] > 0) {
-        terminal = true;
+        node.terminal = true;
         return -1000000000;
     } 
     if ((*aiScores)[5] > 0) {
-        terminal = true;
+        node.terminal = true;
         return 1000000000;
     }
 	int scoreModifier = 1;
@@ -167,7 +167,7 @@ int Node::evaluate(Node& node){
 int Node::getMaxValue(Node *node, int depthLevel, int alpha, int beta) {
     int eval = -1000000000;
     if(depthLevel == TERMINAL_DEPTH){ 
-        minmax = evaluate((*node));
+        minmax = node->evaluate((*node));
         return minmax; //Evaluation of node
     }
     node->getChildren();
@@ -218,23 +218,20 @@ int Node::getMinValue(Node *node, int depthLevel, int alpha, int beta) {
  * @param myMove array to place the decided upon move
  * */
 void Node::alphaBetaSearch(std::array<int, 2> *myMove) {
-    int v = getMaxValue(this, 0, -1000000000, 1000000000);
+    int v = getMaxValue(this, 0, -1000000000, 1000000001);
     cout << "BEST MINIMAX FOR MY TURN: " << v << endl;
     int eval;
-    for (Node child : children) { 
+    for (Node &child : children) { 
         if (v == 1000000000) {
             //this is to make sure we make the winning move if we have it
-                            cout << "Max value" << endl;
-
+            //cout << "Max value" << endl;
+            int test = child.evaluate(child);
             if (child.minmax == v && child.terminal) {
                 (*myMove)[0] = child.previousX;
                 (*myMove)[1] = child.previousY;
-                cout << "Im a terminal child" << endl;
                 return;    
             }
             else if (child.minmax == v) {
-                                cout << "Im a max child" << endl;
-
                 (*myMove)[0] = child.previousX;
                 (*myMove)[1] = child.previousY;
             }
