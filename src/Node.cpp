@@ -2,7 +2,7 @@
 
 using namespace std; 
 
-const int TERMINAL_DEPTH = 5;
+const int TERMINAL_DEPTH = 3;
 
 /***
 *  Constructor for a node
@@ -202,14 +202,14 @@ int Node::evaluate(){
 
     }
 
+	if (playerPattern[5] > 0) {
+        terminal = true;
+        return -1000000000;
+    }
     if (computerPattern[5] > 0) {
         terminal = true;
         return 1000000000;
     }
-	if (playerPattern[5] > 0) {
-        terminal = true;
-        return -1000000000;
-    } 
 	int x = 1;
 	score += computerPattern[1];
 	score -= playerPattern[1]*5;
@@ -300,6 +300,10 @@ void Node::alphaBetaSearch(std::array<int, 2> *myMove) {
                 (*myMove)[1] = child.previousY;
                 return;    
             }
+            else if (child.minmax == v) {
+                (*myMove)[0] = child.previousX;
+                (*myMove)[1] = child.previousY;
+            }
         }
         else if (child.minmax == v) {
             (*myMove)[0] = child.previousX;
@@ -307,6 +311,7 @@ void Node::alphaBetaSearch(std::array<int, 2> *myMove) {
             return;
         }
     }
+    return;
 }
 
 
