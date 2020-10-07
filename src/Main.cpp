@@ -20,12 +20,15 @@ FileHandler * fileHandler;
 std::array<std::array<int, 15>, 15> board{};
 std::vector<std::array<int, 2>> previousMoves;
 char writeOut[10] = {'I', 'r', 'o', 'h', ' ', '\0'};
+int maxTime = 9000;
+int currentTime;
 
 int madeMoveRow;
 int madeMoveCol;
 
 int main(int argc, char *argv[])
 {
+    
     madeMoveRow = 0;
     madeMoveCol = 0;
     bool firstPass = true;
@@ -33,7 +36,7 @@ int main(int argc, char *argv[])
     while(true){
 	if(fileHandler->listenForTurn()){
         cout << "My turn" << endl;
-
+        currentTime = 0;
         //TODO: Start timer for iterative deepening search
         if(fileHandler->checkGameOver()){
             break;
@@ -91,9 +94,14 @@ int main(int argc, char *argv[])
         std::array<int, 2> myInts;
         myInts[0] = 1;
         myInts[1] = 2;
-        thread alphabetaThread(&Node::alphaBetaSearch, &node, &myInts);
-        alphabetaThread.join();
-        //node.alphaBetaSearch(&myInts);
+        /*thread alphabetaThread(&Node::alphaBetaSearch, &node, &myInts);
+        while (currentTime < maxTime) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(50));
+            currentTime += 50;
+        }
+        alphabetaThread.detach();
+        alphabetaThread.~thread();*/
+        node.alphaBetaSearch(&myInts);
         
         //update game state and write move to reflect our move
         std::array<int, 2> previousMove = {myInts[0], myInts[1]};
