@@ -55,8 +55,8 @@ void translateCoordsIntoMove(int moveRow, int moveCol, char* strOut) {
     *p = ' ';
     p++;
     //now the tougher part
-    if (tempOutRow < 10) {
-        *p = (char) tempOutRow+48;
+    if (tempOutRow < 9) {
+        *p = (char) tempOutRow+49;
         *(p+1) = '\0';
     }
     else {

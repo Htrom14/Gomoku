@@ -28,15 +28,19 @@ int main(int argc, char *argv[])
     madeMoveRow = 0;
     madeMoveCol = 0;
     bool firstPass = true;
+    bool secondPass = false;
     while(true){
 	if(fileHandler->listenForTurn()){
         cout << "My turn" << endl;
+
         //TODO: Start timer for iterative deepening search
         if(fileHandler->checkGameOver()){
             break;
         }
         std::string lastMove = fileHandler->getLastMove();
         if (firstPass) {
+            secondPass = true;
+            firstPass = false;
             //special code for first time through, initializing the board
             if (lastMove.length() < 2) {
                 makeMoveOnBoard(board, 7, 7, 1);
@@ -54,9 +58,16 @@ int main(int argc, char *argv[])
                 //decide if we want to flip the other persons stone, if so do it
             }
         }
-        
         cout << lastMove << endl;
         translateMoveToCoords(lastMove, &madeMoveRow,&madeMoveCol);
+        if (secondPass) {
+            secondPass = false;
+            if (madeMoveRow == 7 && madeMoveCol == 7) {
+                previousMoves.clear();
+            }
+        }
+
+        
         cout << "Opponent MADE MOVE: " << madeMoveRow << " " << madeMoveCol << endl;
         makeMoveOnBoard(board, madeMoveRow, madeMoveCol, 2);
         Node node = Node(2, board, 0, madeMoveRow, madeMoveCol, previousMoves);

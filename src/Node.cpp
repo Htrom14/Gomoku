@@ -61,7 +61,7 @@ int Node::evaluate(){
         	    //count patterns in columns
 				int c = board[move[0]][move[1]];
 
-                cout << "C: " << c << endl;
+                //cout << "C: " << c << endl;
 				bool needMax = c == 1;
 				
 				
@@ -81,12 +81,12 @@ int Node::evaluate(){
 					l++;
 				}
 
-                cout << "SameSymbol: " << sameSymbol << endl;
+                //cout << "SameSymbol: " << sameSymbol << endl;
 				if (sameSymbol >= 5){
 					if (needMax) computerPattern[5]++;
 					else playerPattern[5]++;
 				}else if (sameSymbol == 4 && (board[move[0]-k][move[1]] == 0 || board[move[0]+l][move[1]] == 0)){ 				
-					cout << "here" << endl;
+					//cout << "here" << endl;
                     if (needMax) computerPattern[4]++;
 					else playerPattern[4]++;
 				}else if (sameSymbol == 3 && (board[move[0]-k][move[1]] == 0 || board[move[0]+l][move[1]] == 0)){
@@ -119,7 +119,7 @@ int Node::evaluate(){
 					if (needMax) computerPattern[5]++;
 					else playerPattern[5]++;
 				}else if (sameSymbol == 4 && (board[move[0]][move[1]-k] == 0 || board[move[0]][move[1]+l] == 0)){ 				
-					cout << "here" << endl;
+					//cout << "here" << endl;
                     if (needMax) computerPattern[4]++;
 					else playerPattern[4]++;
 				}else if (sameSymbol == 3 && (board[move[0]][move[1]-k] == 0 || board[move[0]][move[1]+l] == 0)){
@@ -153,7 +153,7 @@ int Node::evaluate(){
 					if (needMax) computerPattern[5]++;
 					else playerPattern[5]++;
 				}else if (sameSymbol == 4 && (board[move[0]-k][move[1]-k] == 0 || board[move[0]+l][move[1]+l] == 0)){ 				
-					cout << "here" << endl;
+					//cout << "here" << endl;
                     if (needMax) computerPattern[4]++;
 					else playerPattern[4]++;
 				}else if (sameSymbol == 3 && (board[move[0]-k][move[1]-k] == 0 || board[move[0]+l][move[1]+l] == 0)){
@@ -186,7 +186,7 @@ int Node::evaluate(){
 					if (needMax) computerPattern[5]++;
 					else playerPattern[5]++;
 				}else if (sameSymbol == 4 && (board[move[0]-k][move[1]+k] == 0 || board[move[0]+l][move[1]-l] == 0)){ 				
-					cout << "here" << endl;
+					//cout << "here" << endl;
                     if (needMax) computerPattern[4]++;
 					else playerPattern[4]++;
 				}else if (sameSymbol == 3 && (board[move[0]-k][move[1]+k] == 0 || board[move[0]+l][move[1]-l] == 0)){
@@ -202,22 +202,28 @@ int Node::evaluate(){
 
     }
 
-    if (computerPattern[5] > 0) return 1000000000;
-	if (playerPattern[5] > 0) return -1000000000;
+    if (computerPattern[5] > 0) {
+        terminal = true;
+        return 1000000000;
+    }
+	if (playerPattern[5] > 0) {
+        terminal = true;
+        return -1000000000;
+    } 
 	int x = 1;
 	score += computerPattern[1];
 	score -= playerPattern[1]*5;
 	for (int i = 2 ; i < 5 ; i++){
 		//cout <<computerPattern[i] << " : "<<playerPattern[i]<<endl;
 		x *= 100;
-        cout << "i: " << i << endl;
-        cout << "Computer Pattern[i]: " << computerPattern[i] << endl;
-        cout << "Player Pattern[i]: " << playerPattern[i] << endl;
+        //cout << "i: " << i << endl;
+        //cout << "Computer Pattern[i]: " << computerPattern[i] << endl;
+        //cout << "Player Pattern[i]: " << playerPattern[i] << endl;
 
 		score += computerPattern[i] * x;
 		score -= playerPattern[i] * x * 10;
 	}
-    cout << "Score: " << score << endl << endl;
+    //cout << "Score: " << score << endl << endl;
     return score;
 }
 
@@ -270,7 +276,14 @@ void Node::alphaBetaSearch(std::array<int, 2> *myMove) {
     cout << "BEST MINIMAX FOR MY TURN: " << v << endl;
     int eval;
     for (Node child : children) { 
-        if (child.minmax == v) {
+        if (v == 1000000000) {
+            if (child.minmax == v && child.terminal) {
+                (*myMove)[0] = child.previousX;
+                (*myMove)[1] = child.previousY;
+                return;    
+            }
+        }
+        else if (child.minmax == v) {
             //child.printMoveOrder(v, 1);
             (*myMove)[0] = child.previousX;
             (*myMove)[1] = child.previousY;
