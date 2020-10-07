@@ -20,7 +20,10 @@ void makeMoveOnBoard(std::array<std::array<int, 15>, 15> &board, int x, int y, i
  * @param outCol pointer to an int to be used as y cal later
  * */
 void translateMoveToCoords(std::string myStr,  int* outRow, int* outCol) {
+    //moveRow maps '1'-'15' -> 0-14
+    //moveCol maps 'A'->'O' or 'a'->'o' -> 0-14 
     char c = myStr[0];
+    //check if it is a lowercase letter. if so, convert to upper
     if ((int) c > 80) {
         c = (char) ((int)c - 32);
     }
@@ -30,6 +33,8 @@ void translateMoveToCoords(std::string myStr,  int* outRow, int* outCol) {
         std::cout << myStr[2] << std::endl;
     }
     else if (myStr.length() == 4) {
+        //two character row #. Adding 9 because we are 0 indexed
+        //(myStr[2-3] = '10'-'15', we only need last char, then add 9)
         *outRow = (int)(myStr[3]-48) + 9;
     }
     else {
@@ -46,6 +51,8 @@ void translateMoveToCoords(std::string myStr,  int* outRow, int* outCol) {
  * @param strOut pointer to character array (at least 5 from the end) to put the move into
  * */
 void translateCoordsIntoMove(int moveRow, int moveCol, char* strOut) {
+    //moveRow maps 0-14 -> '1'-'15'
+    //moveCol maps 0-14 -> 'A'->'O'
     int tempOutRow = moveRow;
     char* p;
     p = strOut;
@@ -56,10 +63,12 @@ void translateCoordsIntoMove(int moveRow, int moveCol, char* strOut) {
     p++;
     //now the tougher part
     if (tempOutRow < 9) {
+        //output = 1-9 (< 9 because 9 maps to 10 with zero indexing)
         *p = (char) tempOutRow+49;
         *(p+1) = '\0';
     }
     else {
+        //output 10-15
         *p = '1';
         *(p+1) = (char)((tempOutRow-9)+48);
         *(p+2) = '\0'; 
