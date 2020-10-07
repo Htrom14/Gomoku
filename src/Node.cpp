@@ -2,7 +2,7 @@
 
 using namespace std; 
 
-const int TERMINAL_DEPTH = 4;
+const int TERMINAL_DEPTH = 5;
 
 /***
 *  Constructor for a node
@@ -32,30 +32,198 @@ Node::Node(int turn1, std::array<std::array<int, 15>, 15> board1, int depth1, in
  *  Evaluates the current status of the board
  *  @return the evaluation value
  *  */
+// int Node::evaluate(){
+//     //loop through board
+//     int score = 0;
+
+//     for(std::array<int, 2> move : previousMoves){
+//         for(std::array<int, 2> neighbor : getNeighborsOf8(move[0], move[1])){
+//             if(board[move[0]][move[1]] == 1){
+//                 if(board[neighbor[0]][neighbor[1]] == 1){
+//                     score++;
+//                 }
+//             }
+//             else{
+//                 if(board[neighbor[0]][neighbor[1]] == 2){
+//                     score--;
+//                 }
+//             }
+//         }
+//     }
+//     return score;
+// }
 int Node::evaluate(){
     //loop through board
     int score = 0;
-
+    vector<int> computerPattern(6,0);
+	vector<int> playerPattern(6,0);
     for(std::array<int, 2> move : previousMoves){
-        for(std::array<int, 2> neighbor : getNeighborsOf8(move[0], move[1])){
-            if(board[move[0]][move[1]] == 1){
-                if(board[neighbor[0]][neighbor[1]] == 1){
-                    score++;
-                }
-            }
-            else{
-                if(board[neighbor[0]][neighbor[1]] == 2){
-                    score--;
-                }
-            }
-        }
+        	    //count patterns in columns
+				int c = board[move[0]][move[1]];
+
+                cout << "C: " << c << endl;
+				bool needMax = c == 1;
+				
+				
+				
+				int sameSymbol = 1; // count same symbols in columns 
+				int k = 1;
+				while (move[0]- k >= 0 && board[move[0]-k][move[1]]  == c){
+					sameSymbol++;
+					k++;
+				}
+				
+				
+				//consider value at i - k later to see if it's blocked or not
+				int l = 1;
+				while (move[0] + l <= 14 && board[move[0] + l][move[1]] == c){
+					sameSymbol++;
+					l++;
+				}
+
+                cout << "SameSymbol: " << sameSymbol << endl;
+				if (sameSymbol >= 5){
+					if (needMax) computerPattern[5]++;
+					else playerPattern[5]++;
+				}else if (sameSymbol == 4 && (board[move[0]-k][move[1]] == 0 || board[move[0]+l][move[1]] == 0)){ 				
+					cout << "here" << endl;
+                    if (needMax) computerPattern[4]++;
+					else playerPattern[4]++;
+				}else if (sameSymbol == 3 && (board[move[0]-k][move[1]] == 0 || board[move[0]+l][move[1]] == 0)){
+					if (needMax) computerPattern[3]++;
+					else playerPattern[3]++;
+				}else if (sameSymbol == 3 && (board[move[0]-k][move[1]] == 0 && board[move[0]+l][move[1]] == 0)){
+					if (needMax) computerPattern[2]++;
+					else playerPattern[2]++;
+				}else if (sameSymbol == 2 && (board[move[0]-k][move[1]] == 0 && board[move[0]+l][move[1]] == 0)){
+					if (needMax) computerPattern[1]++;
+					else playerPattern[1]++;
+				}
+
+				//-------------------------------------------------------------------------------
+				sameSymbol = 1; // count same symbols in rows
+				k = 1;
+                while (move[1]- k >= 0 && board[move[0]][move[1]-k]  == c){
+					sameSymbol++;
+					k++;
+				}
+				
+				
+				//consider value at i - k later to see if it's blocked or not
+				 l = 1;
+				while (move[1] + l <= 14 && board[move[0]][move[1]+l] == c){
+					sameSymbol++;
+					l++;
+				}
+                if (sameSymbol >= 5){
+					if (needMax) computerPattern[5]++;
+					else playerPattern[5]++;
+				}else if (sameSymbol == 4 && (board[move[0]][move[1]-k] == 0 || board[move[0]][move[1]+l] == 0)){ 				
+					cout << "here" << endl;
+                    if (needMax) computerPattern[4]++;
+					else playerPattern[4]++;
+				}else if (sameSymbol == 3 && (board[move[0]][move[1]-k] == 0 || board[move[0]][move[1]+l] == 0)){
+					if (needMax) computerPattern[3]++;
+					else playerPattern[3]++;
+				}else if (sameSymbol == 3 && (board[move[0]][move[1]-k] == 0 || board[move[0]][move[1]+l] == 0)){
+					if (needMax) computerPattern[2]++;
+					else playerPattern[2]++;
+				}else if (sameSymbol == 2 && (board[move[0]][move[1]-k] == 0 || board[move[0]][move[1]+l] == 0)){
+					if (needMax) computerPattern[1]++;
+					else playerPattern[1]++;
+				}
+
+
+                //-------------------------------------------------------------------------------
+				sameSymbol = 1; // count same symbols in diagonals 1
+				k = 1;
+                while (move[1]- k >= 0 && board[move[0]-k][move[1]-k]  == c){
+					sameSymbol++;
+					k++;
+				}
+				
+				
+				//consider value at i - k later to see if it's blocked or not
+				 l = 1;
+				while (move[1] + l <= 14 && board[move[0]+l][move[1]+l] == c){
+					sameSymbol++;
+					l++;
+				}
+                if (sameSymbol >= 5){
+					if (needMax) computerPattern[5]++;
+					else playerPattern[5]++;
+				}else if (sameSymbol == 4 && (board[move[0]-k][move[1]-k] == 0 || board[move[0]+l][move[1]+l] == 0)){ 				
+					cout << "here" << endl;
+                    if (needMax) computerPattern[4]++;
+					else playerPattern[4]++;
+				}else if (sameSymbol == 3 && (board[move[0]-k][move[1]-k] == 0 || board[move[0]+l][move[1]+l] == 0)){
+					if (needMax) computerPattern[3]++;
+					else playerPattern[3]++;
+				}else if (sameSymbol == 3 && (board[move[0]-k][move[1]-k] == 0 || board[move[0]+l][move[1]+l] == 0)){
+					if (needMax) computerPattern[2]++;
+					else playerPattern[2]++;
+				}else if (sameSymbol == 2 && (board[move[0]-k][move[1]-k] == 0 || board[move[0]+l][move[1]+l] == 0)){
+					if (needMax) computerPattern[1]++;
+					else playerPattern[1]++;
+				}
+
+                                //-------------------------------------------------------------------------------
+				sameSymbol = 1; // count same symbols in diagonals 2
+				k = 1;
+                while (move[1]- k >= 0 && board[move[0]-k][move[1]+k]  == c){
+					sameSymbol++;
+					k++;
+				}
+				
+				
+				//consider value at i - k later to see if it's blocked or not
+				 l = 1;
+				while (move[1] + l <= 14 && board[move[0]+l][move[1]-l] == c){
+					sameSymbol++;
+					l++;
+				}
+                if (sameSymbol >= 5){
+					if (needMax) computerPattern[5]++;
+					else playerPattern[5]++;
+				}else if (sameSymbol == 4 && (board[move[0]-k][move[1]+k] == 0 || board[move[0]+l][move[1]-l] == 0)){ 				
+					cout << "here" << endl;
+                    if (needMax) computerPattern[4]++;
+					else playerPattern[4]++;
+				}else if (sameSymbol == 3 && (board[move[0]-k][move[1]+k] == 0 || board[move[0]+l][move[1]-l] == 0)){
+					if (needMax) computerPattern[3]++;
+					else playerPattern[3]++;
+				}else if (sameSymbol == 3 && (board[move[0]-k][move[1]+k] == 0 || board[move[0]+l][move[1]-l] == 0)){
+					if (needMax) computerPattern[2]++;
+					else playerPattern[2]++;
+				}else if (sameSymbol == 2 && (board[move[0]-k][move[1]+k] == 0 || board[move[0]+l][move[1]-l] == 0)){
+					if (needMax) computerPattern[1]++;
+					else playerPattern[1]++;
+				}
+
     }
+
+    if (computerPattern[5] > 0) return 1000000000;
+	if (playerPattern[5] > 0) return -1000000000;
+	int x = 1;
+	score += computerPattern[1];
+	score -= playerPattern[1]*5;
+	for (int i = 2 ; i < 5 ; i++){
+		//cout <<computerPattern[i] << " : "<<playerPattern[i]<<endl;
+		x *= 100;
+        cout << "i: " << i << endl;
+        cout << "Computer Pattern[i]: " << computerPattern[i] << endl;
+        cout << "Player Pattern[i]: " << playerPattern[i] << endl;
+
+		score += computerPattern[i] * x;
+		score -= playerPattern[i] * x * 10;
+	}
+    cout << "Score: " << score << endl << endl;
     return score;
 }
 
 
 int Node::getMaxValue(Node *node, int depthLevel, int alpha, int beta) {
-    int eval = -10000000;
+    int eval = -1000000000;
     if(depthLevel == TERMINAL_DEPTH || terminal == true){ 
         minmax = evaluate();
         return minmax; //Evaluation of node
@@ -77,7 +245,7 @@ int Node::getMaxValue(Node *node, int depthLevel, int alpha, int beta) {
 }
 
 int Node::getMinValue(Node *node, int depthLevel, int alpha, int beta) {
-    int eval = 10000000;
+    int eval = 1000000000;
     if(depthLevel == TERMINAL_DEPTH || terminal == true){ 
         minmax = evaluate();
         return minmax; //Evaluation of node
@@ -98,7 +266,7 @@ int Node::getMinValue(Node *node, int depthLevel, int alpha, int beta) {
 }
 
 void Node::alphaBetaSearch(std::array<int, 2> *myMove) {
-    int v = getMaxValue(this, 0, -10000000, 10000000);
+    int v = getMaxValue(this, 0, -1000000000, 1000000000);
     cout << v << endl;
     int eval;
     for (Node child : children) { 
