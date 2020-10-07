@@ -94,13 +94,8 @@ int main(int argc, char *argv[])
         std::array<int, 2> myInts;
         myInts[0] = 1;
         myInts[1] = 2;
-        /*thread alphabetaThread(&Node::alphaBetaSearch, &node, &myInts);
-        while (currentTime < maxTime) {
-            std::this_thread::sleep_for(std::chrono::milliseconds(50));
-            currentTime += 50;
-        }
-        alphabetaThread.detach();
-        alphabetaThread.~thread();*/
+        
+        //perform the search and place result in myInts
         node.alphaBetaSearch(&myInts);
         
         //update game state and write move to reflect our move
@@ -110,12 +105,11 @@ int main(int argc, char *argv[])
         previousMoves.push_back(previousMove);
         translateCoordsIntoMove(myInts[0], myInts[1], &writeOut[5]);
         
-        //make the move
+        //make the move into the text file
         ofstream myfile;
         myfile.open("move_file");
         myfile << writeOut;
         myfile.close();
-        //node.printBoard();
         
         for(int i = 0; i < 15; i++){
             for(int j = 0; j < 15; j++){
@@ -124,7 +118,7 @@ int main(int argc, char *argv[])
             cout << endl;
         }
 
-        //sleep so the referee actually deletes the .go file
+        //sleep so the referee actually deletes the .go file in time
         std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 		}else{
 			std::this_thread::sleep_for(std::chrono::milliseconds(50));
