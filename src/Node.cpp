@@ -2,7 +2,7 @@
 
 using namespace std; 
 
-const int TERMINAL_DEPTH = 4;
+const int TERMINAL_DEPTH = 3;
 
 /***
 *  Constructor for a node
@@ -136,14 +136,14 @@ int Node::evaluate(){
                 evaluateHelper(isEmptyBackwards, isEmptyForwards, numInRow, isAi, aiScores, enemyScores);
     }
 
-    if ((*aiScores)[5] > 0) {
-        terminal = true;
-        return 1000000000;
-    }
 	if ((*enemyScores)[5] > 0) {
         terminal = true;
         return -1000000000;
     } 
+    if ((*aiScores)[5] > 0) {
+        terminal = true;
+        return 1000000000;
+    }
 	int scoreModifier = 1;
 	score += (*aiScores)[1];
 	score -= (*enemyScores)[1]*2;
@@ -166,8 +166,8 @@ int Node::evaluate(){
  * */
 int Node::getMaxValue(Node *node, int depthLevel, int alpha, int beta) {
     int eval = -1000000000;
-    if(depthLevel == TERMINAL_DEPTH || terminal == true){ 
-        minmax = evaluate();
+    if(depthLevel == TERMINAL_DEPTH){ 
+        minmax = node->evaluate();
         return minmax; //Evaluation of node
     }
     node->getChildren();
@@ -194,8 +194,8 @@ int Node::getMaxValue(Node *node, int depthLevel, int alpha, int beta) {
  * */
 int Node::getMinValue(Node *node, int depthLevel, int alpha, int beta) {
     int eval = 1000000000;
-    if(depthLevel == TERMINAL_DEPTH || terminal == true){ 
-        minmax = evaluate();
+    if(depthLevel == TERMINAL_DEPTH){ 
+        minmax = node->evaluate();
         return minmax; //Evaluation of node
     }
     node->getChildren();
@@ -224,10 +224,19 @@ void Node::alphaBetaSearch(std::array<int, 2> *myMove) {
     for (Node child : children) { 
         if (v == 1000000000) {
             //this is to make sure we make the winning move if we have it
+                            cout << "Max value" << endl;
+
             if (child.minmax == v && child.terminal) {
                 (*myMove)[0] = child.previousX;
                 (*myMove)[1] = child.previousY;
+                cout << "Im a terminal child" << endl;
                 return;    
+            }
+            else if (child.minmax == v) {
+                                cout << "Im a max child" << endl;
+
+                (*myMove)[0] = child.previousX;
+                (*myMove)[1] = child.previousY;
             }
         }
         else if (child.minmax == v) {
@@ -236,6 +245,7 @@ void Node::alphaBetaSearch(std::array<int, 2> *myMove) {
             return;
         }
     }
+    return;
 }
 
 
