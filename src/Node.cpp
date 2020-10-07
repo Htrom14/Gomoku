@@ -57,7 +57,7 @@ void Node::evaluateHelper(bool isEmptyBackwards, bool isEmptyForwards, int numIn
  *  Apply increasing score modifiers to score vectors that have a more piecies in a row. Add these values to total score.
  *  @return the evaluation value
  *  */
-int Node::evaluate(){
+int Node::evaluate(Node& node){
     int score = 0;
     vector<int> * aiScores = new vector<int>(6,0);
 	vector<int> * enemyScores = new vector<int>(6,0);
@@ -167,7 +167,7 @@ int Node::evaluate(){
 int Node::getMaxValue(Node *node, int depthLevel, int alpha, int beta) {
     int eval = -1000000000;
     if(depthLevel == TERMINAL_DEPTH){ 
-        minmax = node->evaluate();
+        minmax = evaluate((*node));
         return minmax; //Evaluation of node
     }
     node->getChildren();
@@ -195,7 +195,7 @@ int Node::getMaxValue(Node *node, int depthLevel, int alpha, int beta) {
 int Node::getMinValue(Node *node, int depthLevel, int alpha, int beta) {
     int eval = 1000000000;
     if(depthLevel == TERMINAL_DEPTH){ 
-        minmax = node->evaluate();
+        minmax = evaluate((*node));
         return minmax; //Evaluation of node
     }
     node->getChildren();

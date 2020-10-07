@@ -18,7 +18,7 @@ public:
     int minmax;
     std::vector<std::array<int, 2>> previousMoves;
     std::deque<Node> children;
-    int evaluate();
+    int evaluate(Node& node);
     void evaluateHelper(bool isEmptyBackwards, bool isEmptyForwards, int numInRow, bool isAi, std::vector<int>* aiScores, std::vector<int> * enemyScores);
     void printBoard();
     int getMinMax();
