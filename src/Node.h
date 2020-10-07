@@ -18,14 +18,13 @@ public:
     int minmax;
     std::vector<std::array<int, 2>> previousMoves;
     std::deque<Node> children;
-    int updateMinMax(int depthLevel, bool maximizingPlayer);
     int evaluate();
+    void evaluateHelper(bool isEmptyBackwards, bool isEmptyForwards, int numInRow, bool isAi, std::vector<int>* aiScores, std::vector<int> * enemyScores);
     void printBoard();
     int getMinMax();
     void getChildren();
     void printMoveOrder(int eval, int numMove);
     void alphaBetaSearch(std::array<int, 2> *myMove);
-    //int Node::getMaxValue(int depthLevel, int alpha, int beta);
     int getMaxValue(Node *node, int depthLevel, int alpha, int beta);
     int getMinValue(Node *node, int depthLevel, int alpha, int beta);
 };

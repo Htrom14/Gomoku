@@ -2,7 +2,7 @@
 
 using namespace std; 
 
-const int TERMINAL_DEPTH = 5;
+const int TERMINAL_DEPTH = 4;
 
 /***
 *  Constructor for a node
@@ -28,202 +28,131 @@ Node::Node(int turn1, std::array<std::array<int, 15>, 15> board1, int depth1, in
     }
 }
 
+
 /**
- *  Evaluates the current status of the board
+ *  Helper function for evaluation. Modifies aiScores and enemyScores
+ *  */
+void Node::evaluateHelper(bool isEmptyBackwards, bool isEmptyForwards, int numInRow, bool isAi, vector<int> * aiScores, vector<int> * enemyScores){
+    if (numInRow >= 5){
+        if (isAi) (*aiScores)[5]++;
+        else (*enemyScores)[5]++;
+    }else if (numInRow == 4 && (isEmptyBackwards || isEmptyForwards)){ 				
+        if (isAi) (*aiScores)[4]++;
+        else (*enemyScores)[4]++;
+    }else if (numInRow == 3 && (isEmptyBackwards || isEmptyForwards)){
+        if (isAi) (*aiScores)[3]++;
+        else (*enemyScores)[3]++;
+    }else if (numInRow == 3 && (isEmptyBackwards && isEmptyForwards)){
+        if (isAi) (*aiScores)[2]++;
+        else (*enemyScores)[2]++;
+    }else if (numInRow == 2 && (isEmptyBackwards && isEmptyForwards)){
+        if (isAi) (*aiScores)[1]++;
+        else (*enemyScores)[1]++;
+    }
+}
+
+
+/**
+ *  Evaluates the current status of the board. Checks to see number of pieces in a row for a played move. If that move is not cut off in the front, add it to a score vector
+ *  Apply increasing score modifiers to score vectors that have a more piecies in a row. Add these values to total score.
  *  @return the evaluation value
  *  */
-// int Node::evaluate(){
-//     //loop through board
-//     int score = 0;
-
-//     for(std::array<int, 2> move : previousMoves){
-//         for(std::array<int, 2> neighbor : getNeighborsOf8(move[0], move[1])){
-//             if(board[move[0]][move[1]] == 1){
-//                 if(board[neighbor[0]][neighbor[1]] == 1){
-//                     score++;
-//                 }
-//             }
-//             else{
-//                 if(board[neighbor[0]][neighbor[1]] == 2){
-//                     score--;
-//                 }
-//             }
-//         }
-//     }
-//     return score;
-// }
 int Node::evaluate(){
-    //loop through board
     int score = 0;
-    vector<int> computerPattern(6,0);
-	vector<int> playerPattern(6,0);
+    vector<int> * aiScores = new vector<int>(6,0);
+	vector<int> * enemyScores = new vector<int>(6,0);
+
     for(std::array<int, 2> move : previousMoves){
-        	    //count patterns in columns
-				int c = board[move[0]][move[1]];
-
-                //cout << "C: " << c << endl;
-				bool needMax = c == 1;
+				int turn = board[move[0]][move[1]];
+				bool isAi = turn == 1;		
 				
-				
-				
-				int sameSymbol = 1; // count same symbols in columns 
-				int k = 1;
-				while (move[0]- k >= 0 && board[move[0]-k][move[1]]  == c){
-					sameSymbol++;
-					k++;
+				int numInRow = 1;
+				int overShootBackwards = 1;
+				while (move[0]- overShootBackwards >= 0 && board[move[0]-overShootBackwards][move[1]]  == turn){
+					numInRow++;
+					overShootBackwards++;
 				}
 				
-				
-				//consider value at i - k later to see if it's blocked or not
-				int l = 1;
-				while (move[0] + l <= 14 && board[move[0] + l][move[1]] == c){
-					sameSymbol++;
-					l++;
+				int overShootForwards = 1;
+				while (move[0] + overShootForwards <= 14 && board[move[0] + overShootForwards][move[1]] == turn){
+					numInRow++;
+					overShootForwards++;
 				}
 
-                //cout << "SameSymbol: " << sameSymbol << endl;
-				if (sameSymbol >= 5){
-					if (needMax) computerPattern[5]++;
-					else playerPattern[5]++;
-				}else if (sameSymbol == 4 && (board[move[0]-k][move[1]] == 0 || board[move[0]+l][move[1]] == 0)){ 				
-					//cout << "here" << endl;
-                    if (needMax) computerPattern[4]++;
-					else playerPattern[4]++;
-				}else if (sameSymbol == 3 && (board[move[0]-k][move[1]] == 0 || board[move[0]+l][move[1]] == 0)){
-					if (needMax) computerPattern[3]++;
-					else playerPattern[3]++;
-				}else if (sameSymbol == 3 && (board[move[0]-k][move[1]] == 0 && board[move[0]+l][move[1]] == 0)){
-					if (needMax) computerPattern[2]++;
-					else playerPattern[2]++;
-				}else if (sameSymbol == 2 && (board[move[0]-k][move[1]] == 0 && board[move[0]+l][move[1]] == 0)){
-					if (needMax) computerPattern[1]++;
-					else playerPattern[1]++;
-				}
-
-				//-------------------------------------------------------------------------------
-				sameSymbol = 1; // count same symbols in rows
-				k = 1;
-                while (move[1]- k >= 0 && board[move[0]][move[1]-k]  == c){
-					sameSymbol++;
-					k++;
-				}
-				
-				
-				//consider value at i - k later to see if it's blocked or not
-				 l = 1;
-				while (move[1] + l <= 14 && board[move[0]][move[1]+l] == c){
-					sameSymbol++;
-					l++;
-				}
-                if (sameSymbol >= 5){
-					if (needMax) computerPattern[5]++;
-					else playerPattern[5]++;
-				}else if (sameSymbol == 4 && (board[move[0]][move[1]-k] == 0 || board[move[0]][move[1]+l] == 0)){ 				
-					//cout << "here" << endl;
-                    if (needMax) computerPattern[4]++;
-					else playerPattern[4]++;
-				}else if (sameSymbol == 3 && (board[move[0]][move[1]-k] == 0 || board[move[0]][move[1]+l] == 0)){
-					if (needMax) computerPattern[3]++;
-					else playerPattern[3]++;
-				}else if (sameSymbol == 3 && (board[move[0]][move[1]-k] == 0 || board[move[0]][move[1]+l] == 0)){
-					if (needMax) computerPattern[2]++;
-					else playerPattern[2]++;
-				}else if (sameSymbol == 2 && (board[move[0]][move[1]-k] == 0 || board[move[0]][move[1]+l] == 0)){
-					if (needMax) computerPattern[1]++;
-					else playerPattern[1]++;
-				}
+                bool isEmptyBackwards = board[move[0]-overShootBackwards][move[1]] == 0;
+                bool isEmptyForwards = board[move[0]+overShootForwards][move[1]] == 0;
+				evaluateHelper(isEmptyBackwards, isEmptyForwards, numInRow, isAi, aiScores, enemyScores);
 
 
-                //-------------------------------------------------------------------------------
-				sameSymbol = 1; // count same symbols in diagonals 1
-				k = 1;
-                while (move[1]- k >= 0 && board[move[0]-k][move[1]-k]  == c){
-					sameSymbol++;
-					k++;
-				}
-				
-				
-				//consider value at i - k later to see if it's blocked or not
-				 l = 1;
-				while (move[1] + l <= 14 && board[move[0]+l][move[1]+l] == c){
-					sameSymbol++;
-					l++;
-				}
-                if (sameSymbol >= 5){
-					if (needMax) computerPattern[5]++;
-					else playerPattern[5]++;
-				}else if (sameSymbol == 4 && (board[move[0]-k][move[1]-k] == 0 || board[move[0]+l][move[1]+l] == 0)){ 				
-					//cout << "here" << endl;
-                    if (needMax) computerPattern[4]++;
-					else playerPattern[4]++;
-				}else if (sameSymbol == 3 && (board[move[0]-k][move[1]-k] == 0 || board[move[0]+l][move[1]+l] == 0)){
-					if (needMax) computerPattern[3]++;
-					else playerPattern[3]++;
-				}else if (sameSymbol == 3 && (board[move[0]-k][move[1]-k] == 0 || board[move[0]+l][move[1]+l] == 0)){
-					if (needMax) computerPattern[2]++;
-					else playerPattern[2]++;
-				}else if (sameSymbol == 2 && (board[move[0]-k][move[1]-k] == 0 || board[move[0]+l][move[1]+l] == 0)){
-					if (needMax) computerPattern[1]++;
-					else playerPattern[1]++;
+				numInRow = 1;
+				overShootBackwards = 1;
+                while (move[1]- overShootBackwards >= 0 && board[move[0]][move[1]-overShootBackwards]  == turn){
+					numInRow++;
+					overShootBackwards++;
 				}
 
-                                //-------------------------------------------------------------------------------
-				sameSymbol = 1; // count same symbols in diagonals 2
-				k = 1;
-                while (move[1]- k >= 0 && board[move[0]-k][move[1]+k]  == c){
-					sameSymbol++;
-					k++;
-				}
-				
-				
-				//consider value at i - k later to see if it's blocked or not
-				 l = 1;
-				while (move[1] + l <= 14 && board[move[0]+l][move[1]-l] == c){
-					sameSymbol++;
-					l++;
-				}
-                if (sameSymbol >= 5){
-					if (needMax) computerPattern[5]++;
-					else playerPattern[5]++;
-				}else if (sameSymbol == 4 && (board[move[0]-k][move[1]+k] == 0 || board[move[0]+l][move[1]-l] == 0)){ 				
-					//cout << "here" << endl;
-                    if (needMax) computerPattern[4]++;
-					else playerPattern[4]++;
-				}else if (sameSymbol == 3 && (board[move[0]-k][move[1]+k] == 0 || board[move[0]+l][move[1]-l] == 0)){
-					if (needMax) computerPattern[3]++;
-					else playerPattern[3]++;
-				}else if (sameSymbol == 3 && (board[move[0]-k][move[1]+k] == 0 || board[move[0]+l][move[1]-l] == 0)){
-					if (needMax) computerPattern[2]++;
-					else playerPattern[2]++;
-				}else if (sameSymbol == 2 && (board[move[0]-k][move[1]+k] == 0 || board[move[0]+l][move[1]-l] == 0)){
-					if (needMax) computerPattern[1]++;
-					else playerPattern[1]++;
+				overShootForwards = 1;
+				while (move[1] + overShootForwards  <= 14 && board[move[0]][move[1]+overShootForwards] == turn){
+					numInRow++;
+					overShootForwards++;
 				}
 
+                isEmptyBackwards = board[move[0]][move[1]-overShootBackwards] == 0;
+                isEmptyForwards = board[move[0]][move[1]+overShootForwards] == 0;
+                evaluateHelper(isEmptyBackwards, isEmptyForwards, numInRow, isAi, aiScores, enemyScores);
+
+				numInRow = 1;
+				overShootBackwards = 1;
+                while (move[1]- overShootBackwards >= 0 && board[move[0]-overShootBackwards][move[1]-overShootBackwards]  == turn){
+					numInRow++;
+					overShootBackwards++;
+				}
+				overShootForwards = 1;
+				while (move[1] + overShootForwards <= 14 && board[move[0]+overShootForwards][move[1]+overShootForwards] == turn){
+					numInRow++;
+					overShootForwards++;
+				}
+
+                isEmptyBackwards = board[move[0]-overShootBackwards][move[1]-overShootBackwards] == 0;
+                isEmptyForwards = board[move[0]+overShootForwards][move[1]+overShootForwards] == 0;
+                evaluateHelper(isEmptyBackwards, isEmptyForwards, numInRow, isAi, aiScores, enemyScores);
+
+
+				numInRow = 1;
+				overShootBackwards = 1;
+                while (move[1]- overShootBackwards >= 0 && board[move[0]-overShootBackwards][move[1]+overShootBackwards]  == turn){
+					numInRow++;
+					overShootBackwards++;
+				}
+				
+				overShootForwards = 1;
+				while (move[1] + overShootForwards <= 14 && board[move[0]+overShootForwards][move[1]-overShootForwards] == turn){
+					numInRow++;
+					overShootForwards++;
+				}
+
+                isEmptyBackwards = board[move[0]-overShootBackwards][move[1]+overShootBackwards] == 0;
+                isEmptyForwards = board[move[0]+overShootForwards][move[1]-overShootForwards] == 0;
+                evaluateHelper(isEmptyBackwards, isEmptyForwards, numInRow, isAi, aiScores, enemyScores);
     }
 
-    if (computerPattern[5] > 0) {
+    if ((*aiScores)[5] > 0) {
         terminal = true;
         return 1000000000;
     }
-	if (playerPattern[5] > 0) {
+	if ((*enemyScores)[5] > 0) {
         terminal = true;
         return -1000000000;
     } 
-	int x = 1;
-	score += computerPattern[1];
-	score -= playerPattern[1]*5;
-	for (int i = 2 ; i < 5 ; i++){
-		//cout <<computerPattern[i] << " : "<<playerPattern[i]<<endl;
-		x *= 100;
-        //cout << "i: " << i << endl;
-        //cout << "Computer Pattern[i]: " << computerPattern[i] << endl;
-        //cout << "Player Pattern[i]: " << playerPattern[i] << endl;
+	int scoreModifier = 1;
+	score += (*aiScores)[1];
+	score -= (*enemyScores)[1]*2;
 
-		score += computerPattern[i] * x;
-		score -= playerPattern[i] * x * 10;
+	for (int i = 2 ; i < 5 ; i++){
+		scoreModifier *= 100;
+		score += (*aiScores)[i] * scoreModifier;
+		score -= (*enemyScores)[i] * scoreModifier * 10;
 	}
-    //cout << "Score: " << score << endl << endl;
     return score;
 }
 
