@@ -166,8 +166,10 @@ int Node::evaluate(Node& node){
  * */
 int Node::getMaxValue(Node *node, int depthLevel, int alpha, int beta) {
     int eval = -1000000000;
-    if(depthLevel == TERMINAL_DEPTH){ 
-        minmax = node->evaluate((*node));
+    int thisNode = evaluate((*node));
+    if(depthLevel == TERMINAL_DEPTH || node->terminal || thisNode >= 1000000000){ 
+        //we've won
+        minmax = thisNode;
         return minmax; //Evaluation of node
     }
     node->getChildren();
@@ -194,8 +196,10 @@ int Node::getMaxValue(Node *node, int depthLevel, int alpha, int beta) {
  * */
 int Node::getMinValue(Node *node, int depthLevel, int alpha, int beta) {
     int eval = 1000000000;
-    if(depthLevel == TERMINAL_DEPTH){ 
-        minmax = evaluate((*node));
+    int thisNode = evaluate((*node));
+    if(depthLevel == TERMINAL_DEPTH || node->terminal || thisNode <= -10000000){ 
+        //this is either the end, we've lost/won, or its a bad node
+        minmax = thisNode;
         return minmax; //Evaluation of node
     }
     node->getChildren();
@@ -222,7 +226,7 @@ void Node::alphaBetaSearch(std::array<int, 2> *myMove) {
     cout << "BEST MINIMAX FOR MY TURN: " << v << endl;
     int eval;
     // Forward Prune
-    v = this->forwardPrune(0);
+    //v = this->forwardPrune(0);
     for (Node &child : children) { 
         if (v == 1000000000) {
             //this is to make sure we make the winning move if we have it

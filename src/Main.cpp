@@ -47,10 +47,10 @@ int main(int argc, char *argv[])
             firstPass = false;
             //special code for first time through, initializing the board
             if (lastMove.length() < 2) {
-                makeMoveOnBoard(board, 7, 7, 1);
-                std::array<int, 2> previousMove = {7,7};
+                makeMoveOnBoard(board, 0, 0, 1);
+                std::array<int, 2> previousMove = {0,0};
                 previousMoves.push_back(previousMove);
-                translateCoordsIntoMove(7, 7, &writeOut[5]);
+                translateCoordsIntoMove(0, 0, &writeOut[5]);
                 ofstream myfile;
                 myfile.open("move_file");
                 myfile << writeOut;

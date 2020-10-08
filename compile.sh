@@ -1,1 +1,1 @@
-g++ -pthread -o ./build/gomoku src/Main.cpp src/FileHandler.cpp src/boardHandlers.cpp src/Node.cpp -I ./src
+g++ -pthread -o ./Iroh src/Main.cpp src/FileHandler.cpp src/boardHandlers.cpp src/Node.cpp -I ./src
