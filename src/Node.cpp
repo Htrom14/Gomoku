@@ -221,6 +221,8 @@ void Node::alphaBetaSearch(std::array<int, 2> *myMove) {
     int v = getMaxValue(this, 0, -1000000000, 1000000001);
     cout << "BEST MINIMAX FOR MY TURN: " << v << endl;
     int eval;
+    // Forward Prune
+    forwardPrune(0);
     for (Node &child : children) { 
         if (v == 1000000000) {
             //this is to make sure we make the winning move if we have it
@@ -243,6 +245,54 @@ void Node::alphaBetaSearch(std::array<int, 2> *myMove) {
         }
     }
     return;
+}
+
+std::deque<Node> Node::getBestChildren(){
+    // Select best  3 children
+    std::vector<std::array<int, 2>> goodChildrenIndexMinMax{};
+    std::deque<Node> goodChildren;
+    for(int i = 0; i < 3; i++){
+        goodChildrenIndexMinMax.at(i)[1] = -1000000000;
+    }
+    int currentMinMax;
+    for(int i = 0; i < children.size(); i++){
+        currentMinMax = children.at(i).minmax;
+        for(int j = 0; j < 3; j++){
+            if(currentMinMax > goodChildrenIndexMinMax.at(j)[1]){
+                goodChildrenIndexMinMax.at(j) = {i, currentMinMax};
+                break;
+            }
+        }
+    }
+
+    for(int i = 0; i < 3; i++){
+        goodChildren.push_back(children.at(goodChildrenIndexMinMax.at(i)[0]));
+    }
+
+    return  goodChildren;
+}
+
+int Node::forwardPrune(int depthLevel){
+    if(depthLevel == 1){ 
+        return minmax; //Evaluation of node
+    }
+    // get best children
+    // alphaBetaSearch on them again
+    // I want to then figure out who is the best child
+    children = getBestChildren();
+    int childMax = -100000000;
+    for(Node &child : children){
+        if(depthLevel % 2 == 1){
+            getMinValue(&child, 0, -1000000000, 1000000001);
+        } else if(depthLevel > 0){
+            getMaxValue(&child, 0, -1000000000, 1000000001);
+        }
+        child.minmax = forwardPrune(depthLevel+1);
+        if(child.minmax > childMax){
+            childMax = child.minmax;
+        }
+    }
+    return childMax;
 }
 
 

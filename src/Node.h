@@ -27,6 +27,8 @@ public:
     void alphaBetaSearch(std::array<int, 2> *myMove);
     int getMaxValue(Node *node, int depthLevel, int alpha, int beta);
     int getMinValue(Node *node, int depthLevel, int alpha, int beta);
+    std::deque<Node> getBestChildren();
+    int forwardPrune(int depthLevel);
 };
 
 #endif
