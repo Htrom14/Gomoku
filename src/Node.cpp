@@ -10,7 +10,7 @@ const int TERMINAL_DEPTH = 3;
 *  @param board The current state of the board
 *  @return the newly created node object
 */
-Node::Node(int turn1, std::array<std::array<int, 15>, 15> board1, int depth1, int previousX1, int previousY1, std::vector<std::array<int, 2>> previousMoves1)
+Node::Node(int turn1, std::array<std::array<int, 15>, 15> board1, int depth1, int previousX1, int previousY1, std::vector<std::array<int, 2>> &previousMoves1)
 { 
     terminal = false;
     previousX = previousX1;
@@ -164,24 +164,25 @@ int Node::evaluate(Node& node){
  * @param beta the maximum possible value up to this point so far (this node)
  * @return maximum possible value at this node
  * */
-int Node::getMaxValue(Node *node, int depthLevel, int alpha, int beta) {
+int Node::getMaxValue(Node &node, int depthLevel, int alpha, const int beta) {
+    int alpha2 = alpha;
     int eval = -1000000000;
-    int thisNode = evaluate((*node));
-    if(depthLevel == TERMINAL_DEPTH || node->terminal || thisNode >= 1000000000){ 
+    int thisNode = evaluate(node);
+    if(depthLevel == TERMINAL_DEPTH || node.terminal){ 
         //we've won
         minmax = thisNode;
         return minmax; //Evaluation of node
     }
-    node->getChildren();
-    for (Node &child : node->children) {
+    node.getChildren();
+    for (Node &child : node.children) {
         //update the childs minmax so we know which one to pick later, and print
-        child.minmax = child.getMinValue(&child, depthLevel+1, alpha, beta);
+        child.minmax = child.getMinValue(child, depthLevel+1, alpha2, beta);
         eval = max(eval, child.minmax);
         if (eval >= beta) {
-            minmax = eval;
+            //minmax = eval;
             return eval;
         }
-        alpha = max(alpha, eval);
+        alpha2 = max(alpha2, eval);
     } 
     return eval;
 }
@@ -194,23 +195,25 @@ int Node::getMaxValue(Node *node, int depthLevel, int alpha, int beta) {
  * @param beta the maximum possible value up to this point so far (this node)
  * @return minimum possible value at this node
  * */
-int Node::getMinValue(Node *node, int depthLevel, int alpha, int beta) {
+int Node::getMinValue(Node &node, int depthLevel, const int alpha, int beta) {
     int eval = 1000000000;
-    int thisNode = evaluate((*node));
-    if(depthLevel == TERMINAL_DEPTH || node->terminal || thisNode <= -10000000){ 
+    int beta2 = beta;
+    int thisNode = evaluate(node);
+    if(depthLevel == TERMINAL_DEPTH || node.terminal){ 
         //this is either the end, we've lost/won, or its a bad node
         minmax = thisNode;
         return minmax; //Evaluation of node
     }
-    node->getChildren();
-    for (Node &child : node->children) {
+    node.getChildren();
+    for (Node &child : node.children) {
+        
         //update the childs minmax so we know which one to pick later, and print
-        child.minmax = child.getMaxValue(&child, depthLevel+1, alpha, beta);
+        child.minmax = child.getMaxValue(child, depthLevel+1, alpha, beta2);
         eval = min(eval, child.minmax);
         if (eval <= alpha) {
             return eval;
         }
-        beta = min(beta, eval); 
+        beta2 = min(beta2, eval); 
     }
     return eval;
 }
@@ -222,11 +225,12 @@ int Node::getMinValue(Node *node, int depthLevel, int alpha, int beta) {
  * @param myMove array to place the decided upon move
  * */
 void Node::alphaBetaSearch(std::array<int, 2> *myMove) {
-    int v = getMaxValue(this, 0, -1000000000, 1000000001);
+    int v = getMaxValue(*this, 0, -1000000000, 1000000001);
     cout << "BEST MINIMAX FOR MY TURN: " << v << endl;
     int eval;
-    // Forward Prune
+    cout << "CHILDREN SIZE:" << children.size() << endl;
     //v = this->forwardPrune(0);
+    int i = 0;
     for (Node &child : children) { 
         if (v == 1000000000) {
             //this is to make sure we make the winning move if we have it
@@ -247,6 +251,7 @@ void Node::alphaBetaSearch(std::array<int, 2> *myMove) {
             (*myMove)[1] = child.previousY;
             return;
         }
+        i++;
     }
     return;
 }
@@ -293,9 +298,9 @@ int Node::forwardPrune(int depthLevel){
     int childMax = -100000000;
     for(Node &child : children){
         if(depthLevel % 2 == 1){
-            getMinValue(&child, 0, -1000000000, 1000000001);
+            getMinValue(child, 0, -1000000000, 1000000001);
         } else if(depthLevel > 0){
-            getMaxValue(&child, 0, -1000000000, 1000000001);
+            getMaxValue(child, 0, -1000000000, 1000000001);
         }
         child.minmax = child.forwardPrune(depthLevel+1);
         if(child.minmax > childMax){
@@ -340,7 +345,11 @@ void Node::getChildren() {
     std::deque<std::array<std::array<int, 15>, 15>> childBoards;
     std::deque<Node> childNodes;
     std::vector<std::array<int, 2>> correspondingMoves = getListOfMoves(board, 3-turn, &childBoards, previousMoves);
+    if (childBoards.size() != correspondingMoves.size()) {
+        cout << "HOUSTON: WE HAVE A PROBLEM" << endl;
+    }
     for (int i = 0; i < childBoards.size(); i++) {
+        
         childNodes.emplace_front(Node(3-turn, childBoards[i], depth+1, correspondingMoves.at(i)[0], correspondingMoves.at(i)[1], previousMoves));
     }
     children = childNodes;

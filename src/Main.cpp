@@ -87,6 +87,7 @@ int main(int argc, char *argv[])
 
         
         cout << "Opponent MADE MOVE: " << madeMoveRow << " " << madeMoveCol << endl;
+        std::array<int, 2> oppPrevMove = {madeMoveRow, madeMoveCol};
         makeMoveOnBoard(board, madeMoveRow, madeMoveCol, 2);
         Node node = Node(2, board, 0, madeMoveRow, madeMoveCol, previousMoves);
         
@@ -97,6 +98,7 @@ int main(int argc, char *argv[])
         
         //perform the search and place result in myInts
         node.alphaBetaSearch(&myInts);
+        previousMoves.push_back(oppPrevMove);
         
         //update game state and write move to reflect our move
         std::array<int, 2> previousMove = {myInts[0], myInts[1]};

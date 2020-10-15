@@ -84,18 +84,31 @@ void translateCoordsIntoMove(int moveRow, int moveCol, char* strOut) {
 std::vector<std::array<int, 2>>  getListOfMoves(std::array<std::array<int, 15>, 15> board, int turn, std::deque<std::array<std::array<int, 15>, 15>> *boardList, std::vector<std::array<int, 2>> previousMoves){
     std::vector<std::array<int, 2>> correspondingMoves;
     for(std::array<int, 2> prevMove : previousMoves){
+        //one possible fix- board stores possible moves, we only add new ones
         for(std::array<int, 2> neighbor : getNeighborsOf8(prevMove[0], prevMove[1])){
             if (board[neighbor[0]][neighbor[1]] == 0) {
                 std::array<int, 2> move = {neighbor[0],neighbor[1]};
-                correspondingMoves.push_back(move);
-                std::array<std::array<int, 15>, 15> newBoard {};
-                std::copy(&board[0][0], &board[0][0]+15*15, &newBoard[0][0]);
-                newBoard[move[0]][move[1]] = turn;
-                boardList->push_back(newBoard);
+                if (!checkInPrevMoves(correspondingMoves, move)) {
+                    correspondingMoves.push_back(move);
+                    std::array<std::array<int, 15>, 15> newBoard {};
+                    std::copy(&board[0][0], &board[0][0]+15*15, &newBoard[0][0]);
+                    newBoard[move[0]][move[1]] = turn;
+                    boardList->push_back(newBoard);
+                }
+                
             }
         }
     }
     return correspondingMoves;
+}
+
+bool checkInPrevMoves(const std::vector<std::array<int, 2>> &previousMoves, const  std::array<int, 2> &move) {
+    for (int i = 0; i < previousMoves.size(); i ++) {
+        if (move[0] == previousMoves[i][0] && move[1] == previousMoves[i][1]) {
+            return true;
+        }
+    }
+    return false;
 }
 
 /**

@@ -8,12 +8,13 @@
 class Node
 {
 public:
-    Node(int turn1, std::array<std::array<int, 15>, 15> board1, int depth1, int previousX1, int previousY1, std::vector<std::array<int, 2>> previousMoves);
+    Node(int turn1, std::array<std::array<int, 15>, 15> board1, int depth1, int previousX1, int previousY1, std::vector<std::array<int, 2>> &previousMoves);
     int depth;
     int turn;
     int previousX, previousY;
     bool terminal;
     int evaluation;
+    int utility;
     std::array<std::array<int, 15>, 15> board;
     int minmax;
     std::vector<std::array<int, 2>> previousMoves;
@@ -25,8 +26,9 @@ public:
     void getChildren();
     void printMoveOrder(int eval, int numMove);
     void alphaBetaSearch(std::array<int, 2> *myMove);
-    int getMaxValue(Node *node, int depthLevel, int alpha, int beta);
-    int getMinValue(Node *node, int depthLevel, int alpha, int beta);
+    int getMaxValue(Node &node, int depthLevel, int alpha, const int beta);
+    //int getMinValue(Node *node, int depthLevel, int alpha, int beta);
+    int getMinValue(Node &node, int depthLevel, const int alpha, int beta);
     std::deque<Node> getBestChildren();
     int forwardPrune(int depthLevel);
 };
